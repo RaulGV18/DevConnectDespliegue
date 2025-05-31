@@ -1,0 +1,22 @@
+.feature-card {
+    transition: transform 0.3s, background-color 0.3s, color 0.3s;
+  }
+  
+  /* Al pasar el ratón por encima de la tarjeta se agranda y cambia estilos */
+  .feature-card:hover {
+    transform: scale(1.05);
+    background-color: #28a745 !important;  /* Fondo verde */
+    color: #000 !important;                /* Texto en negro */
+  }
+  
+  /* Aseguramos que los textos dentro de la tarjeta se actualicen */
+  .feature-card:hover .card-title,
+  .feature-card:hover .card-text {
+    color: #000 !important;
+  }
+  
+  /* Se actualiza el color de los iconos al pasar el ratón */
+  .feature-card:hover i {
+    color: #000 !important;
+  }
+  
