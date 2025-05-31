@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\EmpresaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EmpresaRepository::class)]
+#[ApiResource]
 class Empresa
 {
     #[ORM\Id]
@@ -16,15 +18,15 @@ class Empresa
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nombre_empresa = null;
+    private ?string $nombre = null;
 
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $contraseña = null;
+    private ?string $password = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $sector = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -33,7 +35,7 @@ class Empresa
     /**
      * @var Collection<int, Ofertalaboral>
      */
-    #[ORM\OneToMany(targetEntity: Ofertalaboral::class, mappedBy: 'empresa', orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'empresa', targetEntity: Ofertalaboral::class, orphanRemoval: true)]
     private Collection $ofertaslaborales;
 
     public function __construct()
@@ -46,15 +48,14 @@ class Empresa
         return $this->id;
     }
 
-    public function getNombreEmpresa(): ?string
+    public function getNombre(): ?string
     {
-        return $this->nombre_empresa;
+        return $this->nombre;
     }
 
-    public function setNombreEmpresa(string $nombre_empresa): static
+    public function setNombre(string $nombre): static
     {
-        $this->nombre_empresa = $nombre_empresa;
-
+        $this->nombre = $nombre;
         return $this;
     }
 
@@ -66,19 +67,17 @@ class Empresa
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
-    public function getContraseña(): ?string
+    public function getPassword(): ?string
     {
-        return $this->contraseña;
+        return $this->password;
     }
 
-    public function setContraseña(string $contraseña): static
+    public function setPassword(string $password): static
     {
-        $this->contraseña = $contraseña;
-
+        $this->password = $password;
         return $this;
     }
 
@@ -87,10 +86,9 @@ class Empresa
         return $this->sector;
     }
 
-    public function setSector(string $sector): static
+    public function setSector(?string $sector): static
     {
         $this->sector = $sector;
-
         return $this;
     }
 
@@ -102,7 +100,6 @@ class Empresa
     public function setSitioWeb(?string $sitio_web): static
     {
         $this->sitio_web = $sitio_web;
-
         return $this;
     }
 
@@ -127,7 +124,6 @@ class Empresa
     public function removeOfertaslaborale(Ofertalaboral $ofertaslaborale): static
     {
         if ($this->ofertaslaborales->removeElement($ofertaslaborale)) {
-            // set the owning side to null (unless already changed)
             if ($ofertaslaborale->getEmpresa() === $this) {
                 $ofertaslaborale->setEmpresa(null);
             }

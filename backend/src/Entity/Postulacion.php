@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PostulacionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostulacionRepository::class)]
+#[ApiResource]
 class Postulacion
 {
     #[ORM\Id]
@@ -13,48 +15,42 @@ class Postulacion
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $estado = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $Usuario = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $cv = null;
+    #[ORM\ManyToOne(inversedBy: 'postulaciones')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Ofertalaboral $ofertalaboral = null;
 
     #[ORM\ManyToOne(inversedBy: 'postulaciones')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Usuario $usuario = null;
 
-    #[ORM\ManyToOne(inversedBy: 'postulaciones')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?OfertaLaboral $ofertaLaboral = null;
+    #[ORM\Column(length: 255)]
+    private ?string $cv = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getEstado(): ?string
+    public function getOfertalaboral(): ?Ofertalaboral
     {
-        return $this->estado;
+        return $this->ofertalaboral;
     }
 
-    public function setEstado(string $estado): static
+    public function setOfertalaboral(?Ofertalaboral $ofertalaboral): static
     {
-        $this->estado = $estado;
+        $this->ofertalaboral = $ofertalaboral;
 
         return $this;
     }
 
-    public function getUsuario(): ?string
+    public function getUsuario(): ?Usuario
     {
-        return $this->Usuario;
+        return $this->usuario;
     }
 
-    public function setUsuario(string $Usuario): static
+    public function setUsuario(?Usuario $usuario): static
     {
-        $this->Usuario = $Usuario;
+        $this->usuario = $usuario;
 
         return $this;
     }
@@ -67,18 +63,6 @@ class Postulacion
     public function setCv(string $cv): static
     {
         $this->cv = $cv;
-
-        return $this;
-    }
-
-    public function getOfertaLaboral(): ?OfertaLaboral
-    {
-        return $this->ofertaLaboral;
-    }
-
-    public function setOfertaLaboral(?OfertaLaboral $ofertaLaboral): static
-    {
-        $this->ofertaLaboral = $ofertaLaboral;
 
         return $this;
     }

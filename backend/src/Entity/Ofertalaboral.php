@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\OfertalaboralRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,6 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OfertalaboralRepository::class)]
+#[ApiResource]
 class Ofertalaboral
 {
     #[ORM\Id]
@@ -16,24 +18,24 @@ class Ofertalaboral
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $titulo = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $descripcion = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $tecnologiasRequeridas = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $expercienciaMinima = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $ubicacion = null;
-
     #[ORM\ManyToOne(inversedBy: 'ofertaslaborales')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Empresa $empresa = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $titulo = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $descripcion = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $tecnologias_requeridas = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $experiencia_minima = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $ubicacion = null;
 
     /**
      * @var Collection<int, Postulacion>
@@ -49,6 +51,18 @@ class Ofertalaboral
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getEmpresa(): ?Empresa
+    {
+        return $this->empresa;
+    }
+
+    public function setEmpresa(?Empresa $empresa): static
+    {
+        $this->empresa = $empresa;
+
+        return $this;
     }
 
     public function getTitulo(): ?string
@@ -68,7 +82,7 @@ class Ofertalaboral
         return $this->descripcion;
     }
 
-    public function setDescripcion(string $descripcion): static
+    public function setDescripcion(?string $descripcion): static
     {
         $this->descripcion = $descripcion;
 
@@ -77,24 +91,24 @@ class Ofertalaboral
 
     public function getTecnologiasRequeridas(): ?string
     {
-        return $this->tecnologiasRequeridas;
+        return $this->tecnologias_requeridas;
     }
 
-    public function setTecnologiasRequeridas(string $tecnologiasRequeridas): static
+    public function setTecnologiasRequeridas(?string $tecnologias_requeridas): static
     {
-        $this->tecnologiasRequeridas = $tecnologiasRequeridas;
+        $this->tecnologias_requeridas = $tecnologias_requeridas;
 
         return $this;
     }
 
-    public function getExpercienciaMinima(): ?string
+    public function getExperienciaMinima(): ?string
     {
-        return $this->expercienciaMinima;
+        return $this->experiencia_minima;
     }
 
-    public function setExpercienciaMinima(string $expercienciaMinima): static
+    public function setExperienciaMinima(?string $experiencia_minima): static
     {
-        $this->expercienciaMinima = $expercienciaMinima;
+        $this->experiencia_minima = $experiencia_minima;
 
         return $this;
     }
@@ -104,21 +118,9 @@ class Ofertalaboral
         return $this->ubicacion;
     }
 
-    public function setUbicacion(string $ubicacion): static
+    public function setUbicacion(?string $ubicacion): static
     {
         $this->ubicacion = $ubicacion;
-
-        return $this;
-    }
-
-    public function getEmpresa(): ?Empresa
-    {
-        return $this->empresa;
-    }
-
-    public function setEmpresa(?Empresa $empresa): static
-    {
-        $this->empresa = $empresa;
 
         return $this;
     }
@@ -144,7 +146,6 @@ class Ofertalaboral
     public function removePostulacione(Postulacion $postulacione): static
     {
         if ($this->postulaciones->removeElement($postulacione)) {
-            // set the owning side to null (unless already changed)
             if ($postulacione->getOfertaLaboral() === $this) {
                 $postulacione->setOfertaLaboral(null);
             }

@@ -4,10 +4,12 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UsuarioRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UsuarioRepository::class)]
-#[ApiResource] // Esto activa la exposición como API
+#[ApiResource]
 class Usuario
 {
     #[ORM\Id]
@@ -15,35 +17,118 @@ class Usuario
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 255)]
     private ?string $nombre = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 255)]
     private ?string $apellido = null;
 
-    #[ORM\Column(length: 150, unique: true)]
-    private ?string $email = null;
+    #[ORM\Column(length: 255)]
+    private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $contrasena = null;
+    private ?string $email = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $fotoPerfil = null;
+    private ?string $foto_perfil = null;
 
-    // Getters y setters...
-    public function getId(): ?int { return $this->id; }
-    public function getNombre(): ?string { return $this->nombre; }
-    public function setNombre(string $nombre): self { $this->nombre = $nombre; return $this; }
+    /**
+     * @var Collection<int, Postulacion>
+     */
+    #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: Postulacion::class, orphanRemoval: true)]
+    private Collection $postulaciones;
 
-    public function getApellido(): ?string { return $this->apellido; }
-    public function setApellido(string $apellido): self { $this->apellido = $apellido; return $this; }
+    public function __construct()
+    {
+        $this->postulaciones = new ArrayCollection();
+    }
 
-    public function getEmail(): ?string { return $this->email; }
-    public function setEmail(string $email): self { $this->email = $email; return $this; }
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
-    public function getContrasena(): ?string { return $this->contrasena; }
-    public function setContrasena(string $contrasena): self { $this->contrasena = $contrasena; return $this; }
+    public function getNombre(): ?string
+    {
+        return $this->nombre;
+    }
 
-    public function getFotoPerfil(): ?string { return $this->fotoPerfil; }
-    public function setFotoPerfil(?string $fotoPerfil): self { $this->fotoPerfil = $fotoPerfil; return $this; }
+    public function setNombre(string $nombre): static
+    {
+        $this->nombre = $nombre;
+        return $this;
+    }
+
+    public function getApellido(): ?string
+    {
+        return $this->apellido;
+    }
+
+    public function setApellido(string $apellido): static
+    {
+        $this->apellido = $apellido;
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+        return $this;
+    }
+
+    public function getFotoPerfil(): ?string
+    {
+        return $this->foto_perfil;
+    }
+
+    public function setFotoPerfil(?string $foto_perfil): static
+    {
+        $this->foto_perfil = $foto_perfil;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Postulacion>
+     */
+    public function getPostulaciones(): Collection
+    {
+        return $this->postulaciones;
+    }
+
+    public function addPostulacione(Postulacion $postulacione): static
+    {
+        if (!$this->postulaciones->contains($postulacione)) {
+            $this->postulaciones->add($postulacione);
+            $postulacione->setUsuario($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostulacione(Postulacion $postulacione): static
+    {
+        if ($this->postulaciones->removeElement($postulacione)) {
+            if ($postulacione->getUsuario() === $this) {
+                $postulacione->setUsuario(null);
+            }
+        }
+
+        return $this;
+    }
 }
