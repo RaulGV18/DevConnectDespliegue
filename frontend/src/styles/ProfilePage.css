@@ -1,0 +1,119 @@
+/* Fondo general */
+.profile-page {
+  background-color: #000;
+  min-height: 80vh;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+/* Contenedor */
+.profile-page__container {
+  max-width: 960px;
+}
+
+/* Imagen perfil */
+.profile-page__img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  display: inline-block;
+}
+
+/* Nombre */
+.profile-page__name {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Descripción */
+.profile-page__description {
+  font-style: italic;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  color: #ddd;
+}
+
+/* Botón editar */
+.profile-page__edit-btn {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* Título sección contacto */
+.profile-page__contact-title {
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  font-size: 1.75rem;
+}
+
+.profile-page__loading {
+  color: white;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+}
+
+
+/* Tarjetas de contacto */
+.contact-card {
+  background-color: #121212;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+  padding: 1.5rem;
+  text-align: center;
+  color: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: default;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+/* Animación hover */
+.contact-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 30px rgba(40, 167, 69, 0.6);
+  cursor: pointer;
+}
+
+/* Título de tarjeta */
+.contact-card__title {
+  font-weight: 600;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Texto de tarjeta */
+.contact-card__text {
+  font-size: 1rem;
+  word-break: break-word;
+}
+
+/* Link GitHub */
+.contact-card__link {
+  color: #28a745;
+  text-decoration: underline;
+  word-break: break-word;
+}
+
+.contact-card__link:hover {
+  color: #1e7e34;
+  text-decoration: none;
+}
+
+/* Texto carga perfil */
+.profile-page__loading {
+  font-size: 1.5rem;
+  text-align: center;
+  padding: 2rem;
+}

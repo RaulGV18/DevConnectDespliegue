@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UsuarioRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UsuarioRepository::class)]
@@ -35,8 +36,17 @@ class Usuario
     /**
      * @var Collection<int, Postulacion>
      */
-    #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: Postulacion::class, orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Postulacion::class, mappedBy: 'usuario', orphanRemoval: true)]
     private Collection $postulaciones;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $telefono = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $github = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $descripcion = null;
 
     public function __construct()
     {
@@ -56,6 +66,7 @@ class Usuario
     public function setNombre(string $nombre): static
     {
         $this->nombre = $nombre;
+
         return $this;
     }
 
@@ -67,6 +78,7 @@ class Usuario
     public function setApellido(string $apellido): static
     {
         $this->apellido = $apellido;
+
         return $this;
     }
 
@@ -78,6 +90,7 @@ class Usuario
     public function setPassword(string $password): static
     {
         $this->password = $password;
+
         return $this;
     }
 
@@ -89,6 +102,7 @@ class Usuario
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -100,6 +114,7 @@ class Usuario
     public function setFotoPerfil(?string $foto_perfil): static
     {
         $this->foto_perfil = $foto_perfil;
+
         return $this;
     }
 
@@ -124,10 +139,47 @@ class Usuario
     public function removePostulacione(Postulacion $postulacione): static
     {
         if ($this->postulaciones->removeElement($postulacione)) {
+            // set the owning side to null (unless already changed)
             if ($postulacione->getUsuario() === $this) {
                 $postulacione->setUsuario(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTelefono(): ?string
+    {
+        return $this->telefono;
+    }
+
+    public function setTelefono(?string $telefono): static
+    {
+        $this->telefono = $telefono;
+
+        return $this;
+    }
+
+    public function getGithub(): ?string
+    {
+        return $this->github;
+    }
+
+    public function setGithub(?string $github): static
+    {
+        $this->github = $github;
+
+        return $this;
+    }
+
+    public function getDescripcion(): ?string
+    {
+        return $this->descripcion;
+    }
+
+    public function setDescripcion(?string $descripcion): static
+    {
+        $this->descripcion = $descripcion;
 
         return $this;
     }

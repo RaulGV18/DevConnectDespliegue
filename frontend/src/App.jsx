@@ -3,6 +3,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ModeProvider } from './ModeContext';
 
+
 import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -13,6 +14,13 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import EnterpriseJobOffersPage from './pages/EnterpriseJobOffersPage';
 import EnterpriseMainPage from './pages/EnterpriseMainPage';
+import EditProfilePage from './pages/EditProfilePage';
+import EnterpriseProfilePage from './pages/EnterpriseProfilePage';
+import EditEnterpriseProfilePage from './pages/EditEnterpriseProfilePage';
+import AddJobOfferPage from './pages/AddJobOfferPage';
+import EditJobOfferPage from './pages/EditJobOfferPage';
+import PostularPage from './pages/PostularPage';
+import CVGenerator from './pages/CVGenerator';
 
 function App() {
   return (
@@ -28,6 +36,15 @@ function App() {
   <Route path="/register" element={<RegisterPage />} />
   <Route path="/enterprise-main-page" element={<EnterpriseMainPage />} />
   <Route path="/misofertas" element={<EnterpriseJobOffersPage />} />
+  <Route path="/editar-perfil" element={<EditProfilePage />} />
+  <Route path="/perfil-empresa" element={<EnterpriseProfilePage />} />
+  <Route path="/editar-perfil-empresa" element={<EditEnterpriseProfilePage />} />
+  <Route path="/añadir-oferta" element={<AddJobOfferPage />} />
+  <Route path="/editar-oferta/:id" element={<EditJobOfferPage />} />
+  <Route path="/postular/:id" element={<PostularPage />} />
+  <Route path="generador-cv" element={<CVGenerator />} />
+  generador-cv
+  
 </Routes>
         <Footer />
       </div>

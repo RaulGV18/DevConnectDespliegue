@@ -1,0 +1,76 @@
+/* styles/EditEnterpriseProfilePage.css */
+
+.edit-enterprise-profile__container {
+  background-color: #000;
+  min-height: 100vh;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.edit-enterprise-profile__title {
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.edit-enterprise-profile__form {
+  width: 100%;
+  max-width: 600px;
+}
+
+.edit-enterprise-profile__alert {
+  margin-bottom: 1rem;
+}
+
+.edit-enterprise-profile__form-group {
+  margin-bottom: 1.25rem;
+}
+
+.edit-enterprise-profile__label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.edit-enterprise-profile__input,
+.edit-enterprise-profile__textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #555;
+  border-radius: 4px;
+  background-color: #121212;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.edit-enterprise-profile__input:focus,
+.edit-enterprise-profile__textarea:focus {
+  outline: none;
+  border-color: #61dafb;
+  box-shadow: 0 0 5px #61dafb;
+}
+
+.edit-enterprise-profile__textarea {
+  resize: vertical;
+}
+
+.edit-enterprise-profile__button {
+  background-color: #28a745;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 1.1rem;
+}
+
+.edit-enterprise-profile__button:hover {
+  background-color: #218838;
+}

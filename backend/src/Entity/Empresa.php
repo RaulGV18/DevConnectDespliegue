@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\EmpresaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EmpresaRepository::class)]
@@ -32,10 +33,19 @@ class Empresa
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $sitio_web = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $descripcion = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $num_empleados = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $telefono = null;
+
     /**
      * @var Collection<int, Ofertalaboral>
      */
-    #[ORM\OneToMany(mappedBy: 'empresa', targetEntity: Ofertalaboral::class, orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Ofertalaboral::class, mappedBy: 'empresa', orphanRemoval: true)]
     private Collection $ofertaslaborales;
 
     public function __construct()
@@ -56,6 +66,7 @@ class Empresa
     public function setNombre(string $nombre): static
     {
         $this->nombre = $nombre;
+
         return $this;
     }
 
@@ -67,6 +78,7 @@ class Empresa
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -78,6 +90,7 @@ class Empresa
     public function setPassword(string $password): static
     {
         $this->password = $password;
+
         return $this;
     }
 
@@ -89,6 +102,7 @@ class Empresa
     public function setSector(?string $sector): static
     {
         $this->sector = $sector;
+
         return $this;
     }
 
@@ -100,6 +114,43 @@ class Empresa
     public function setSitioWeb(?string $sitio_web): static
     {
         $this->sitio_web = $sitio_web;
+
+        return $this;
+    }
+
+    public function getDescripcion(): ?string
+    {
+        return $this->descripcion;
+    }
+
+    public function setDescripcion(?string $descripcion): static
+    {
+        $this->descripcion = $descripcion;
+
+        return $this;
+    }
+
+    public function getNumEmpleados(): ?string
+    {
+        return $this->num_empleados;
+    }
+
+    public function setNumEmpleados(?string $num_empleados): static
+    {
+        $this->num_empleados = $num_empleados;
+
+        return $this;
+    }
+
+    public function getTelefono(): ?string
+    {
+        return $this->telefono;
+    }
+
+    public function setTelefono(?string $telefono): static
+    {
+        $this->telefono = $telefono;
+
         return $this;
     }
 
@@ -124,6 +175,7 @@ class Empresa
     public function removeOfertaslaborale(Ofertalaboral $ofertaslaborale): static
     {
         if ($this->ofertaslaborales->removeElement($ofertaslaborale)) {
+            // set the owning side to null (unless already changed)
             if ($ofertaslaborale->getEmpresa() === $this) {
                 $ofertaslaborale->setEmpresa(null);
             }

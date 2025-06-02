@@ -1,0 +1,27 @@
+.edit-profile {
+  background-color: #000;
+}
+
+.edit-profile__title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.edit-profile__form .form-label {
+  color: #ccc;
+}
+
+.edit-profile__form input,
+.edit-profile__form textarea {
+  background-color: #222;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+.edit-profile__form input:focus,
+.edit-profile__form textarea:focus {
+  background-color: #111;
+  color: #fff;
+  border-color: #28a745;
+  box-shadow: none;
+}

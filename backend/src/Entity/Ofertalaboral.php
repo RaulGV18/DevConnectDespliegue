@@ -40,7 +40,7 @@ class Ofertalaboral
     /**
      * @var Collection<int, Postulacion>
      */
-    #[ORM\OneToMany(targetEntity: Postulacion::class, mappedBy: 'ofertaLaboral', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Postulacion::class, mappedBy: 'ofertalaboral', orphanRemoval: true)]
     private Collection $postulaciones;
 
     public function __construct()
@@ -137,7 +137,7 @@ class Ofertalaboral
     {
         if (!$this->postulaciones->contains($postulacione)) {
             $this->postulaciones->add($postulacione);
-            $postulacione->setOfertaLaboral($this);
+            $postulacione->setOfertalaboral($this);
         }
 
         return $this;
@@ -146,8 +146,9 @@ class Ofertalaboral
     public function removePostulacione(Postulacion $postulacione): static
     {
         if ($this->postulaciones->removeElement($postulacione)) {
-            if ($postulacione->getOfertaLaboral() === $this) {
-                $postulacione->setOfertaLaboral(null);
+            // set the owning side to null (unless already changed)
+            if ($postulacione->getOfertalaboral() === $this) {
+                $postulacione->setOfertalaboral(null);
             }
         }
 

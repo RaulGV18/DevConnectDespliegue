@@ -1,5 +1,5 @@
 import React from 'react';
-import './FeaturesSection.css'; // Importa el CSS para los efectos hover
+import '../styles/FeaturesSection.css'; // Importa el CSS para los efectos hover
 
 function FeaturesSection() {
   return (

@@ -2,12 +2,10 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PostulacionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostulacionRepository::class)]
-#[ApiResource]
 class Postulacion
 {
     #[ORM\Id]
@@ -15,30 +13,45 @@ class Postulacion
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'postulaciones')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Ofertalaboral $ofertalaboral = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $cvFileName = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'postulaciones')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Usuario $usuario = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $cv = null;
+    #[ORM\ManyToOne(inversedBy: 'postulaciones')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Ofertalaboral $ofertalaboral = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getOfertalaboral(): ?Ofertalaboral
+    public function getCvFileName(): ?string
     {
-        return $this->ofertalaboral;
+        return $this->cvFileName;
     }
 
-    public function setOfertalaboral(?Ofertalaboral $ofertalaboral): static
+    public function setCvFileName(?string $cvFileName): static
     {
-        $this->ofertalaboral = $ofertalaboral;
+        $this->cvFileName = $cvFileName;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTime $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
@@ -55,14 +68,14 @@ class Postulacion
         return $this;
     }
 
-    public function getCv(): ?string
+    public function getOfertalaboral(): ?Ofertalaboral
     {
-        return $this->cv;
+        return $this->ofertalaboral;
     }
 
-    public function setCv(string $cv): static
+    public function setOfertalaboral(?Ofertalaboral $ofertalaboral): static
     {
-        $this->cv = $cv;
+        $this->ofertalaboral = $ofertalaboral;
 
         return $this;
     }

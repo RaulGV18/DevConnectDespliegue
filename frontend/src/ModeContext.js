@@ -1,13 +1,21 @@
-import React, { createContext, useContext, useState } from 'react';
+// src/ModeContext.js
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const ModeContext = createContext();
 
 export const ModeProvider = ({ children }) => {
-  // Comienza en modo "cliente"
-  const [mode, setMode] = useState('cliente');
+  const [mode, setMode] = useState(() => {
+    return localStorage.getItem('mode') || 'cliente';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('mode', mode);
+  }, [mode]);
 
   const toggleMode = () => {
-    setMode((prevMode) => (prevMode === 'cliente' ? 'empresa' : 'cliente'));
+    const newMode = mode === 'cliente' ? 'empresa' : 'cliente';
+    setMode(newMode);
+    localStorage.setItem('mode', newMode);
   };
 
   return (
