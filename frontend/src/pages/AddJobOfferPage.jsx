@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles/AddJobOfferPage.css';
 
 function AddJobOfferPage() {
   const navigate = useNavigate();
@@ -50,7 +51,6 @@ function AddJobOfferPage() {
         throw new Error(JSON.stringify(errorData));
       }
 
-      // Redirigir a la lista de ofertas
       navigate('/misofertas');
     } catch (err) {
       setError('Error al crear la oferta. ' + err.message);
@@ -59,82 +59,77 @@ function AddJobOfferPage() {
   };
 
   return (
-    <div className="container py-5 text-white">
-      <h1 className="mb-4">Añadir Nueva Oferta</h1>
+    <div className="add-offer__background">
+      <div className="add-offer" role="main" aria-labelledby="add-offer-title">
+        <h1 id="add-offer-title" className="add-offer__title">Añadir Nueva Oferta</h1>
 
-      {error && (
-        <div className="alert alert-danger">
-          {error}
-        </div>
-      )}
+        {error && (
+          <div className="add-offer__error" role="alert">
+            {error}
+          </div>
+        )}
 
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Título</label>
+        <form className="add-offer__form" onSubmit={handleSubmit} noValidate>
+          <label htmlFor="titulo" className="add-offer__label">Título</label>
           <input
+            id="titulo"
             type="text"
             name="titulo"
-            className="form-control"
+            className="add-offer__input"
             value={formData.titulo}
             onChange={handleChange}
             required
           />
-        </div>
 
-        <div className="mb-3">
-          <label className="form-label">Descripción</label>
+          <label htmlFor="descripcion" className="add-offer__label">Descripción</label>
           <textarea
+            id="descripcion"
             name="descripcion"
-            className="form-control"
+            className="add-offer__textarea"
             value={formData.descripcion}
             onChange={handleChange}
-            required
             rows="4"
+            required
           />
-        </div>
 
-        <div className="mb-3">
-          <label className="form-label">Tecnologías Requeridas</label>
+          <label htmlFor="tecnologias_requeridas" className="add-offer__label">Tecnologías Requeridas</label>
           <input
+            id="tecnologias_requeridas"
             type="text"
             name="tecnologias_requeridas"
-            className="form-control"
+            className="add-offer__input"
+            placeholder="Ej: React, Symfony, Docker"
             value={formData.tecnologias_requeridas}
             onChange={handleChange}
-            placeholder="Ej: React, Symfony, Docker"
             required
           />
-        </div>
 
-        <div className="mb-3">
-          <label className="form-label">Experiencia Mínima</label>
+          <label htmlFor="experiencia_minima" className="add-offer__label">Experiencia Mínima</label>
           <input
+            id="experiencia_minima"
             type="text"
             name="experiencia_minima"
-            className="form-control"
+            className="add-offer__input"
+            placeholder="Ej: 2 años"
             value={formData.experiencia_minima}
             onChange={handleChange}
-            placeholder="Ej: 2 años"
             required
           />
-        </div>
 
-        <div className="mb-3">
-          <label className="form-label">Ubicación</label>
+          <label htmlFor="ubicacion" className="add-offer__label">Ubicación</label>
           <input
+            id="ubicacion"
             type="text"
             name="ubicacion"
-            className="form-control"
+            className="add-offer__input"
             value={formData.ubicacion}
             onChange={handleChange}
             required
           />
-        </div>
 
-        <button type="submit" className="btn btn-success">
-          Publicar Oferta
-        </button>
-      </form>
+          <button type="submit" className="add-offer__button">Publicar Oferta</button>
+        </form>
+      </div>
     </div>
   );
 }

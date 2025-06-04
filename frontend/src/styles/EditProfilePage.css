@@ -1,27 +1,110 @@
+/* styles/EditProfilePage.css */
+
 .edit-profile {
   background-color: #000;
+  min-height: 100vh;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .edit-profile__title {
-  font-size: 2rem;
-  font-weight: bold;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  font-weight: 700;
 }
 
+.edit-profile__form {
+  width: 100%;
+  max-width: 600px;
+}
+
+.edit-profile__alert {
+  margin-bottom: 1rem;
+}
+
+.edit-profile__form-group {
+  margin-bottom: 1.25rem;
+}
+
+.edit-profile__label,
 .edit-profile__form .form-label {
-  color: #ccc;
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #fff;
 }
 
+.edit-profile__input,
+.edit-profile__textarea,
 .edit-profile__form input,
 .edit-profile__form textarea {
-  background-color: #222;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #555;
+  border-radius: 4px;
+  background-color: #121212;
   color: #fff;
-  border: 1px solid #444;
+  font-size: 1rem;
 }
 
+.edit-profile__input:focus,
+.edit-profile__textarea:focus,
 .edit-profile__form input:focus,
 .edit-profile__form textarea:focus {
-  background-color: #111;
+  outline: none;
+  border-color: #61dafb;
+  box-shadow: 0 0 5px #61dafb;
+  background-color: #121212;
+}
+
+.edit-profile__textarea,
+.edit-profile__form textarea {
+  resize: vertical;
+}
+
+.edit-profile__button {
+  background-color: #28a745;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: 4px;
   color: #fff;
-  border-color: #28a745;
-  box-shadow: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 1.1rem;
+}
+
+.edit-profile__button:hover {
+  background-color: #218838;
+}
+
+.profile-page__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
+  min-height: 80vh;
+  text-align: center;
+}
+
+.profile-page__spinner {
+  border: 5px solid #333;
+  border-top: 5px solid #28a745;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: profile-page-spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes profile-page-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

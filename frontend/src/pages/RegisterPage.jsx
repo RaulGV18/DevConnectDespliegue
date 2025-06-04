@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useMode } from '../ModeContext';
+import '../styles/RegisterPage.css';
 
 function RegisterPage() {
   const { mode, toggleMode } = useMode();
@@ -13,12 +14,21 @@ function RegisterPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [modeLocked, setModeLocked] = useState(false);
+
+  // Detectar si ya hay sesión activa
+  useEffect(() => {
+    const usuarioId = localStorage.getItem('usuarioId');
+    const empresaId = localStorage.getItem('empresaId');
+    if (usuarioId || empresaId) {
+      setModeLocked(true);
+    }
+  }, []);
 
   const handleModeChange = (e) => {
     const selectedMode = e.target.value;
-    if (selectedMode !== mode) {
+    if (!modeLocked && selectedMode !== mode) {
       toggleMode();
-      // Reset form fields on mode change
       setNombre('');
       setApellido('');
       setNombreEmpresa('');
@@ -33,22 +43,22 @@ function RegisterPage() {
     setError('');
     setLoading(true);
 
-    // Construir payload según modo
-    const payload = mode === 'cliente' 
-      ? { nombre, apellido, email, password } 
-      : { nombre: nombreEmpresa, email, password };
+    const payload =
+      mode === 'cliente'
+        ? { nombre, apellido, email, password }
+        : { nombre: nombreEmpresa, email, password };
 
-    // Endpoint según modo
-    const endpoint = mode === 'cliente' 
-      ? 'http://localhost:8000/api/usuarios' 
-      : 'http://localhost:8000/api/empresas';
+    const endpoint =
+      mode === 'cliente'
+        ? 'http://localhost:8000/api/usuarios'
+        : 'http://localhost:8000/api/empresas';
 
     try {
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/ld+json', // Importante para ApiPlatform
-          'Accept': 'application/ld+json'
+          'Content-Type': 'application/ld+json',
+          Accept: 'application/ld+json',
         },
         body: JSON.stringify(payload),
       });
@@ -68,114 +78,122 @@ function RegisterPage() {
   };
 
   return (
-    <div className="container py-5" style={{ maxWidth: '400px' }}>
-      <h1 className="mb-4 text-center" style={{ color: '#fff' }}>Registrarse</h1>
+    <div className="register">
+      <div className="register__container">
+        <h1 className="register__title">Registrarse</h1>
 
-      {/* Tipo de cuenta */}
-      <div className="mb-3 text-center">
-        <label style={{ color: '#fff', marginRight: '10px' }}>Tipo de cuenta:</label>
-        <input
-          type="radio"
-          id="cliente"
-          name="accountType"
-          value="cliente"
-          checked={mode === 'cliente'}
-          onChange={handleModeChange}
-        />
-        <label htmlFor="cliente" style={{ color: '#fff', marginRight: '10px' }}>Cliente</label>
-        <input
-          type="radio"
-          id="empresa"
-          name="accountType"
-          value="empresa"
-          checked={mode === 'empresa'}
-          onChange={handleModeChange}
-        />
-        <label htmlFor="empresa" style={{ color: '#fff' }}>Empresa</label>
-      </div>
+        <div className="register__account-type">
+          <label className="register__account-label">Tipo de cuenta:</label>
+          <div className="register__account-options">
+            <div className="register__account-option">
+              <input
+                type="radio"
+                id="cliente"
+                name="accountType"
+                value="cliente"
+                checked={mode === 'cliente'}
+                onChange={handleModeChange}
+                disabled={modeLocked}
+              />
+              <label htmlFor="cliente" className="register__radio-label">
+                Cliente
+              </label>
+            </div>
+            <div className="register__account-option">
+              <input
+                type="radio"
+                id="empresa"
+                name="accountType"
+                value="empresa"
+                checked={mode === 'empresa'}
+                onChange={handleModeChange}
+                disabled={modeLocked}
+              />
+              <label htmlFor="empresa" className="register__radio-label">
+                Empresa
+              </label>
+            </div>
+          </div>
+        </div>
 
-      <form onSubmit={handleSubmit}>
-        {mode === 'cliente' ? (
-          <>
-            <div className="mb-3">
-              <label htmlFor="registerNombre" className="form-label" style={{ color: '#fff' }}>Nombre</label>
+        <form className="register__form" onSubmit={handleSubmit}>
+          {mode === 'cliente' ? (
+            <>
+              <div className="register__form-group">
+                <label htmlFor="registerNombre" className="register__label">Nombre</label>
+                <input
+                  type="text"
+                  className="register__input"
+                  id="registerNombre"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="register__form-group">
+                <label htmlFor="registerApellido" className="register__label">Apellido</label>
+                <input
+                  type="text"
+                  className="register__input"
+                  id="registerApellido"
+                  value={apellido}
+                  onChange={(e) => setApellido(e.target.value)}
+                  required
+                />
+              </div>
+            </>
+          ) : (
+            <div className="register__form-group">
+              <label htmlFor="registerNombreEmpresa" className="register__label">Nombre de la Empresa</label>
               <input
                 type="text"
-                className="form-control"
-                id="registerNombre"
-                placeholder="Tu nombre"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
+                className="register__input"
+                id="registerNombreEmpresa"
+                value={nombreEmpresa}
+                onChange={(e) => setNombreEmpresa(e.target.value)}
                 required
               />
             </div>
-            <div className="mb-3">
-              <label htmlFor="registerApellido" className="form-label" style={{ color: '#fff' }}>Apellido</label>
-              <input
-                type="text"
-                className="form-control"
-                id="registerApellido"
-                placeholder="Tu apellido"
-                value={apellido}
-                onChange={(e) => setApellido(e.target.value)}
-                required
-              />
-            </div>
-          </>
-        ) : (
-          <div className="mb-3">
-            <label htmlFor="registerNombreEmpresa" className="form-label" style={{ color: '#fff' }}>Nombre de la Empresa</label>
+          )}
+
+          <div className="register__form-group">
+            <label htmlFor="registerEmail" className="register__label">Correo Electrónico</label>
             <input
-              type="text"
-              className="form-control"
-              id="registerNombreEmpresa"
-              placeholder="Nombre de la empresa"
-              value={nombreEmpresa}
-              onChange={(e) => setNombreEmpresa(e.target.value)}
+              type="email"
+              className="register__input"
+              id="registerEmail"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
-        )}
 
-        <div className="mb-3">
-          <label htmlFor="registerEmail" className="form-label" style={{ color: '#fff' }}>Correo Electrónico</label>
-          <input
-            type="email"
-            className="form-control"
-            id="registerEmail"
-            placeholder="nombre@ejemplo.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+          <div className="register__form-group">
+            <label htmlFor="registerPassword" className="register__label">Contraseña</label>
+            <input
+              type="password"
+              className="register__input"
+              id="registerPassword"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
-        <div className="mb-3">
-          <label htmlFor="registerPassword" className="form-label" style={{ color: '#fff' }}>Contraseña</label>
-          <input
-            type="password"
-            className="form-control"
-            id="registerPassword"
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
+          {error && <div className="register__error">{error}</div>}
 
-        {error && <div className="alert alert-danger">{error}</div>}
+          <button type="submit" className="register__submit" disabled={loading}>
+            {loading ? 'Registrando...' : 'Registrarse'}
+          </button>
+        </form>
 
-        <button type="submit" className="btn btn-success w-100" disabled={loading}>
-          {loading ? 'Registrando...' : 'Registrarse'}
-        </button>
-      </form>
-
-      <p className="mt-3 text-center" style={{ color: '#fff' }}>
-        ¿Ya tienes una cuenta?{' '}
-        <Link to="/login" style={{ color: 'green', textDecoration: 'underline' }}>
-          Iniciar Sesión
-        </Link>
-      </p>
+        <p className="register__footer">
+          ¿Ya tienes una cuenta?{' '}
+          <Link to="/login" className="register__login-link">
+            Iniciar Sesión
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

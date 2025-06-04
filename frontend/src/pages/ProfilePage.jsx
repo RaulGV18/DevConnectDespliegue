@@ -28,7 +28,11 @@ function ProfilePage() {
   }, [navigate]);
 
   if (!usuario) {
-    return <div className="profile-page__loading">Cargando perfil...</div>;
+    return (
+    <div className="profile-page__loading">
+      <div className="profile-page__spinner"></div>
+      <p>Cargando perfil...</p>
+    </div>)
   }
 
   return (

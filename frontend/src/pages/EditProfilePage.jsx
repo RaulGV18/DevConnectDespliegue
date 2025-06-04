@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles/EditProfilePage.css';
 
 function EditProfilePage() {
   const navigate = useNavigate();
@@ -71,21 +72,22 @@ function EditProfilePage() {
 
   if (!usuario) {
     return (
-      <div className="d-flex justify-content-center align-items-center vh-100 text-white">
-        Cargando perfil...
+      <div className="profile-page__loading">
+        <div className="profile-page__spinner"></div>
+        <p>Cargando perfil...</p>
       </div>
     );
   }
 
   return (
-    <div className="container py-5 text-white">
-      <h2 className="mb-4">Editar Perfil</h2>
-      <form onSubmit={handleSubmit} className="row g-3">
-        <div className="col-md-6">
-          <label className="form-label">Nombre</label>
+    <div className="edit-profile">
+      <h2 className="edit-profile__title">Editar Perfil</h2>
+      <form onSubmit={handleSubmit} className="edit-profile__form">
+        <div className="edit-profile__form-group">
+          <label className="edit-profile__label">Nombre</label>
           <input
             type="text"
-            className="form-control"
+            className="edit-profile__input"
             name="nombre"
             value={formData.nombre}
             onChange={handleChange}
@@ -93,11 +95,11 @@ function EditProfilePage() {
           />
         </div>
 
-        <div className="col-md-6">
-          <label className="form-label">Apellido</label>
+        <div className="edit-profile__form-group">
+          <label className="edit-profile__label">Apellido</label>
           <input
             type="text"
-            className="form-control"
+            className="edit-profile__input"
             name="apellido"
             value={formData.apellido}
             onChange={handleChange}
@@ -105,11 +107,11 @@ function EditProfilePage() {
           />
         </div>
 
-        <div className="col-md-6">
-          <label className="form-label">Email</label>
+        <div className="edit-profile__form-group">
+          <label className="edit-profile__label">Email</label>
           <input
             type="email"
-            className="form-control"
+            className="edit-profile__input"
             name="email"
             value={formData.email}
             onChange={handleChange}
@@ -117,32 +119,32 @@ function EditProfilePage() {
           />
         </div>
 
-        <div className="col-md-6">
-          <label className="form-label">Teléfono</label>
+        <div className="edit-profile__form-group">
+          <label className="edit-profile__label">Teléfono</label>
           <input
             type="text"
-            className="form-control"
+            className="edit-profile__input"
             name="telefono"
             value={formData.telefono}
             onChange={handleChange}
           />
         </div>
 
-        <div className="col-12">
-          <label className="form-label">GitHub</label>
+        <div className="edit-profile__form-group">
+          <label className="edit-profile__label">GitHub</label>
           <input
             type="url"
-            className="form-control"
+            className="edit-profile__input"
             name="github"
             value={formData.github}
             onChange={handleChange}
           />
         </div>
 
-        <div className="col-12">
-          <label className="form-label">Descripción</label>
+        <div className="edit-profile__form-group">
+          <label className="edit-profile__label">Descripción</label>
           <textarea
-            className="form-control"
+            className="edit-profile__textarea"
             name="descripcion"
             rows="4"
             value={formData.descripcion}
@@ -150,8 +152,8 @@ function EditProfilePage() {
           />
         </div>
 
-        <div className="col-12">
-          <button type="submit" className="btn btn-success px-4">
+        <div className="edit-profile__form-group">
+          <button type="submit" className="edit-profile__button">
             Guardar Cambios
           </button>
         </div>

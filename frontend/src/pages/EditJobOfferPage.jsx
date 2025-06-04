@@ -1,6 +1,7 @@
 // src/pages/EditJobOfferPage.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import '../styles/EditJobOfferPage.css';
 
 function EditJobOfferPage() {
   const { id } = useParams();
@@ -69,7 +70,7 @@ function EditJobOfferPage() {
       .then(() => {
         setSaving(false);
         alert('Oferta actualizada correctamente');
-        navigate('/misofertas'); // Ruta ajustada
+        navigate('/misofertas');
       })
       .catch(err => {
         setError(err.message);
@@ -77,88 +78,117 @@ function EditJobOfferPage() {
       });
   };
 
-  if (loading) return <div className="container py-5 text-white">Cargando oferta...</div>;
-  if (error) return <div className="container py-5 text-danger">Error: {error}</div>;
+  if (loading)
+    return (
+      <div className="edit-offer__background">
+        <div className="edit-offer__loading-spinner">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Cargando...</span>
+          </div>
+        </div>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="edit-offer__background">
+        <div className="edit-offer__error">{error}</div>
+      </div>
+    );
 
   return (
-    <div className="container py-5 bg-dark text-white">
-      <h1 className="mb-2 text-white">Editar</h1>
-      <p className="lead mb-4 text-white">Modifica la información de tu oferta laboral</p>
+    <div className="edit-offer__background">
+      <div className="edit-offer container py-5">
+        <h1 className="edit-offer__title">Editar Oferta</h1>
+        <p className="edit-offer__subtitle">Modifica la información de tu oferta laboral</p>
 
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="titulo" className="form-label">Título</label>
-          <input
-            type="text"
-            id="titulo"
-            name="titulo"
-            className="form-control"
-            value={offer.titulo}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="edit-offer__form">
+          <div className="mb-3">
+            <label htmlFor="titulo" className="form-label">
+              Título
+            </label>
+            <input
+              type="text"
+              id="titulo"
+              name="titulo"
+              className="form-control"
+              value={offer.titulo}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div className="mb-3">
-          <label htmlFor="descripcion" className="form-label">Descripción</label>
-          <textarea
-            id="descripcion"
-            name="descripcion"
-            className="form-control"
-            rows="4"
-            value={offer.descripcion}
-            onChange={handleChange}
-          />
-        </div>
+          <div className="mb-3">
+            <label htmlFor="descripcion" className="form-label">
+              Descripción
+            </label>
+            <textarea
+              id="descripcion"
+              name="descripcion"
+              className="form-control"
+              rows="4"
+              value={offer.descripcion}
+              onChange={handleChange}
+            />
+          </div>
 
-        <div className="mb-3">
-          <label htmlFor="tecnologias_requeridas" className="form-label">Tecnologías Requeridas</label>
-          <input
-            type="text"
-            id="tecnologias_requeridas"
-            name="tecnologias_requeridas"
-            className="form-control"
-            value={offer.tecnologias_requeridas}
-            onChange={handleChange}
-          />
-        </div>
+          <div className="mb-3">
+            <label htmlFor="tecnologias_requeridas" className="form-label">
+              Tecnologías Requeridas
+            </label>
+            <input
+              type="text"
+              id="tecnologias_requeridas"
+              name="tecnologias_requeridas"
+              className="form-control"
+              value={offer.tecnologias_requeridas}
+              onChange={handleChange}
+            />
+          </div>
 
-        <div className="mb-3">
-          <label htmlFor="experiencia_minima" className="form-label">Experiencia Mínima</label>
-          <input
-            type="text"
-            id="experiencia_minima"
-            name="experiencia_minima"
-            className="form-control"
-            value={offer.experiencia_minima}
-            onChange={handleChange}
-          />
-        </div>
+          <div className="mb-3">
+            <label htmlFor="experiencia_minima" className="form-label">
+              Experiencia Mínima
+            </label>
+            <input
+              type="text"
+              id="experiencia_minima"
+              name="experiencia_minima"
+              className="form-control"
+              value={offer.experiencia_minima}
+              onChange={handleChange}
+            />
+          </div>
 
-        <div className="mb-3">
-          <label htmlFor="ubicacion" className="form-label">Ubicación</label>
-          <input
-            type="text"
-            id="ubicacion"
-            name="ubicacion"
-            className="form-control"
-            value={offer.ubicacion}
-            onChange={handleChange}
-          />
-        </div>
+          <div className="mb-3">
+            <label htmlFor="ubicacion" className="form-label">
+              Ubicación
+            </label>
+            <input
+              type="text"
+              id="ubicacion"
+              name="ubicacion"
+              className="form-control"
+              value={offer.ubicacion}
+              onChange={handleChange}
+            />
+          </div>
 
-        <button type="submit" className="btn btn-primary" disabled={saving}>
-          {saving ? 'Guardando...' : 'Guardar Cambios'}
-        </button>
-        <button
-          type="button"
-          className="btn btn-secondary ms-2"
-          onClick={() => navigate('/misofertas')}
-          disabled={saving}
-        >
-          Cancelar
-        </button>
-      </form>
+          <div className="edit-offer__buttons">
+            <button type="submit" className="btn btn-primary" disabled={saving}>
+              {saving ? 'Guardando...' : 'Guardar Cambios'}
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary ms-2"
+              onClick={() => navigate('/misofertas')}
+              disabled={saving}
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

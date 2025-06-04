@@ -28,7 +28,8 @@ function Header() {
       '/empresas',
       '/editar-perfil',
       '/postular',
-      '/generador-cv'
+      '/generador-cv',
+      '/empresas/perfil',
     ];
 
     if (!mode) return;

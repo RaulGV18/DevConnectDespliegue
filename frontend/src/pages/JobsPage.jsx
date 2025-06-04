@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles/JobsPage.css';
 
 function JobsPage() {
   const [ofertas, setOfertas] = useState([]);
   const [empresas, setEmpresas] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Hook para redireccionar
+  const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch('http://localhost:8000/api/ofertalaborals', {
@@ -37,23 +39,23 @@ function JobsPage() {
             } else if (typeof empresaRef === 'number') {
               url = `http://localhost:8000/api/empresas/${empresaRef}`;
             } else {
-              return 'Nombre no disponible';
+              return { nombre: 'Nombre no disponible', id: null };
             }
 
             const res = await fetch(url, { headers: { Accept: 'application/ld+json' } });
-            if (!res.ok) return 'Nombre no disponible';
+            if (!res.ok) return { nombre: 'Nombre no disponible', id: null };
             const empresaData = await res.json();
-            return empresaData.nombre || 'Nombre no disponible';
+            return { nombre: empresaData.nombre || 'Nombre no disponible', id: empresaData.id };
           } catch {
-            return 'Nombre no disponible';
+            return { nombre: 'Nombre no disponible', id: null };
           }
         };
 
         const empresasMap = {};
         await Promise.all(
           empresaRefs.map(async (empresaRef) => {
-            const nombre = await fetchEmpresaNombre(empresaRef);
-            empresasMap[empresaRef] = nombre;
+            const { nombre, id } = await fetchEmpresaNombre(empresaRef);
+            empresasMap[empresaRef] = { nombre, id };
           })
         );
 
@@ -71,60 +73,72 @@ function JobsPage() {
     navigate(`/postular/${id}`);
   };
 
-  if (loading) return <div className="container py-5">Cargando ofertas...</div>;
-  if (error) return <div className="container py-5 text-danger">Error: {error}</div>;
+  const filteredOfertas = ofertas.filter(oferta =>
+    oferta.titulo?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (loading) {
+    return (
+      <div className="jobs__loading">
+        <div className="jobs__spinner"></div>
+        <p>Cargando ofertas...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="jobs-page__error text-danger">Error: {error}</div>;
+  }
 
   return (
-    <div className="container py-5">
-      <h1 className="mb-4" style={{ color: '#fff' }}>Ofertas de Empleo</h1>
+    <div className="jobs-page container py-5">
+      <h1 className="jobs-page__title mb-4">Ofertas de Empleo</h1>
 
-      <ul className="list-group">
-        {ofertas.length === 0 && (
-          <li className="list-group-item text-center">No hay ofertas disponibles.</li>
+      <input
+        type="text"
+        className="form-control mb-4 jobs-page__search"
+        placeholder="Buscar por título..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+
+      <ul className="jobs-page__list list-unstyled">
+        {filteredOfertas.length === 0 ? (
+          <li className="jobs-page__empty">No hay ofertas disponibles.</li>
+        ) : (
+          filteredOfertas.map(oferta => {
+            const empresa = empresas[oferta.empresa];
+            return (
+              <li key={oferta.id} className="jobs-page__item">
+                <div className="jobs-page__card">
+                  <h5 className="jobs-page__titulo">
+                    {oferta.titulo || 'Sin título'}
+                  </h5>
+                  <p className="jobs-page__empresa">
+                    <strong>Empresa:</strong>{' '}
+                    {empresa?.id ? (
+                      <a href={`/empresas/perfil/${empresa.id}`} className="jobs-page__empresa-link">
+                        {empresa.nombre}
+                      </a>
+                    ) : (
+                      'Empresa no disponible'
+                    )}
+                  </p>
+                  <p><strong>Funciones:</strong> {oferta.descripcion || 'No hay descripción'}</p>
+                  <p><strong>Tecnologías mínimas requeridas:</strong> {oferta.tecnologiasMinimas || 'No especificado'}</p>
+                  <p><strong>Experiencia mínima:</strong> {oferta.experienciaMinima || 'No especificada'}</p>
+                  <p><strong>Ubicación:</strong> {oferta.ubicacion || 'No especificada'}</p>
+                  <button
+                    className="btn btn-success mt-3"
+                    onClick={() => postularse(oferta.id)}
+                  >
+                    Aplicar
+                  </button>
+                </div>
+              </li>
+            );
+          })
         )}
-
-        {ofertas.map(oferta => (
-          <li
-            key={oferta.id}
-            className="list-group-item mb-3"
-            style={{
-              backgroundColor: '#d6d6d6',
-              border: '1px solid #ccc',
-              padding: '20px',
-            }}
-          >
-            <div className="d-flex flex-column">
-              <h5 style={{ color: '#000', marginBottom: '0.5rem' }}>
-                {oferta.titulo || 'Sin título'}
-              </h5>
-              <p style={{ color: '#000', marginBottom: '1rem' }}>
-                <strong>Empresa:</strong>{' '}
-                <span style={{ color: 'green', textDecoration: 'underline' }}>
-                  {empresas[oferta.empresa] || 'Empresa no disponible'}
-                </span>
-              </p>
-              <p style={{ color: '#000', textAlign: 'left' }}>
-                <strong>Funciones:</strong> {oferta.descripcion || 'No hay descripción'}
-              </p>
-              <p style={{ color: '#000', marginTop: '0.5rem' }}>
-                <strong>Tecnologías mínimas requeridas:</strong> {oferta.tecnologiasMinimas || 'No especificado'}
-              </p>
-              <p style={{ color: '#000', marginTop: '0.5rem' }}>
-                <strong>Experiencia mínima:</strong> {oferta.experienciaMinima || 'No especificada'}
-              </p>
-              <p style={{ color: '#000', marginTop: '0.5rem' }}>
-                <strong>Ubicación:</strong> {oferta.ubicacion || 'No especificada'}
-              </p>
-              <button
-                className="btn btn-success mt-3"
-                type="button"
-                onClick={() => postularse(oferta.id)}
-              >
-                Aplicar
-              </button>
-            </div>
-          </li>
-        ))}
       </ul>
     </div>
   );

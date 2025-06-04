@@ -1,0 +1,132 @@
+/* src/styles/AddJobOfferPage.css */
+
+.add-offer__background {
+  background-color: #121212;
+  min-height: 100vh;
+  padding: 3rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-offer {
+  background-color: #2e2e2e;
+  max-width: 600px;
+  width: 100%;
+  border-radius: 15px;
+  padding: 2.5rem 3rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+  color: #ccc;
+  animation: slideUpFadeIn 0.5s ease forwards;
+}
+
+.add-offer__title {
+  font-size: 2.25rem;
+  margin-bottom: 0.6rem;
+  font-weight: 700;
+  color: #4caf50; /* Verde */
+  text-align: center;
+}
+
+.add-offer__error {
+  background-color: #a94442;
+  color: white;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.add-offer__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.add-offer__label {
+  font-weight: 600;
+  color: #ccc;
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+.add-offer__input,
+.add-offer__textarea {
+  background-color: #3a3a3a;
+  border: 1px solid #555;
+  border-radius: 6px;
+  padding: 0.7rem 1rem;
+  color: #ccc;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  font-family: inherit;
+}
+
+.add-offer__input::placeholder,
+.add-offer__textarea::placeholder {
+  color: #888;
+}
+
+.add-offer__input:focus,
+.add-offer__textarea:focus {
+  border-color: #388e3c;
+  box-shadow: 0 0 8px rgba(56, 142, 60, 0.7);
+  outline: none;
+  background-color: #444;
+  color: #eee;
+}
+
+.add-offer__textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.add-offer__button {
+  background-color: #4caf50;
+  border: none;
+  border-radius: 6px;
+  padding: 0.8rem 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.add-offer__button:hover:not(:disabled) {
+  background-color: #388e3c;
+  transform: scale(1.05);
+}
+
+.add-offer__button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Animaciones */
+@keyframes slideUpFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .add-offer {
+    padding: 2rem 1.5rem;
+  }
+
+  .add-offer__title {
+    font-size: 1.8rem;
+  }
+}

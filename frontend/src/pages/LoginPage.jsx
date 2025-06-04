@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMode } from '../ModeContext';
+import '../styles/LoginPage.css';
 
 function LoginPage() {
   const { mode, toggleMode } = useMode();
@@ -11,6 +12,8 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  const isLoggedIn = localStorage.getItem('usuarioId') || localStorage.getItem('empresaId');
+
   useEffect(() => {
     const endpoint = mode === 'empresa' ? 'http://localhost:8000/api/empresas' : 'http://localhost:8000/api/usuarios';
     fetch(endpoint)
@@ -20,11 +23,13 @@ function LoginPage() {
         console.error('Error al cargar datos:', err);
         setError('No se pudo conectar con el servidor.');
       });
-  }, [mode]); // Se vuelve a cargar si se cambia el modo
+  }, [mode]);
 
   const handleModeChange = (e) => {
     const selectedMode = e.target.value;
-    if (selectedMode !== mode) toggleMode();
+    if (!isLoggedIn && selectedMode !== mode) {
+      toggleMode();
+    }
   };
 
   const handleSubmit = (e) => {
@@ -52,66 +57,75 @@ function LoginPage() {
   };
 
   return (
-    <div className="container py-5" style={{ maxWidth: '400px' }}>
-      <h1 className="mb-4 text-center" style={{ color: '#fff' }}>Iniciar Sesión</h1>
+    <div className="login">
+      <div className="login__container">
+        <h1 className="login__title">Iniciar Sesión</h1>
 
-      <div className="mb-3 text-center">
-        <label style={{ color: '#fff', marginRight: '10px' }}>Tipo de cuenta:</label>
-        <input
-          type="radio"
-          id="cliente"
-          name="accountType"
-          value="cliente"
-          checked={mode === 'cliente'}
-          onChange={handleModeChange}
-        />
-        <label htmlFor="cliente" style={{ color: '#fff', marginRight: '10px' }}>Cliente</label>
-        <input
-          type="radio"
-          id="empresa"
-          name="accountType"
-          value="empresa"
-          checked={mode === 'empresa'}
-          onChange={handleModeChange}
-        />
-        <label htmlFor="empresa" style={{ color: '#fff' }}>Empresa</label>
+        <div className="login__account-type">
+          <label className="login__account-type-label">Tipo de cuenta:</label>
+          <div className="login__account-type-options">
+            <label className="login__radio-label">
+              <input
+                type="radio"
+                name="accountType"
+                value="cliente"
+                checked={mode === 'cliente'}
+                onChange={handleModeChange}
+                disabled={isLoggedIn}
+              />
+              Cliente
+            </label>
+            <label className="login__radio-label">
+              <input
+                type="radio"
+                name="accountType"
+                value="empresa"
+                checked={mode === 'empresa'}
+                onChange={handleModeChange}
+                disabled={isLoggedIn}
+              />
+              Empresa
+            </label>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="login__form">
+          <div className="login__form-group">
+            <label htmlFor="loginEmail" className="login__label">Correo Electrónico</label>
+            <input
+              type="email"
+              className="login__input"
+              id="loginEmail"
+              placeholder="nombre@ejemplo.com"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="login__form-group">
+            <label htmlFor="loginPassword" className="login__label">Contraseña</label>
+            <input
+              type="password"
+              className="login__input"
+              id="loginPassword"
+              placeholder="Contraseña"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          {error && <p className="login__error">{error}</p>}
+
+          <button type="submit" className="login__button">Iniciar Sesión</button>
+        </form>
+
+        <p className="login__redirect">
+          ¿No tienes una cuenta?{' '}
+          <a href="/register" className="login__link">Registrarse</a>
+        </p>
       </div>
-
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="loginEmail" className="form-label" style={{ color: '#fff' }}>Correo Electrónico</label>
-          <input
-            type="email"
-            className="form-control"
-            id="loginEmail"
-            placeholder="nombre@ejemplo.com"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="loginPassword" className="form-label" style={{ color: '#fff' }}>Contraseña</label>
-          <input
-            type="password"
-            className="form-control"
-            id="loginPassword"
-            placeholder="Contraseña"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        {error && <p className="text-danger text-center">{error}</p>}
-        <button type="submit" className="btn btn-success w-100">Iniciar Sesión</button>
-      </form>
-
-      <p className="mt-3 text-center" style={{ color: '#fff' }}>
-        ¿No tienes una cuenta?{' '}
-        <a href="/register" style={{ color: 'green', textDecoration: 'underline' }}>
-          Registrarse
-        </a>
-      </p>
     </div>
   );
 }

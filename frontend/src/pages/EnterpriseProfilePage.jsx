@@ -1,6 +1,6 @@
-// src/pages/EnterpriseProfilePage.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles/EnterpriseProfilePage.css';
 
 function EnterpriseProfilePage() {
   const navigate = useNavigate();
@@ -14,9 +14,7 @@ function EnterpriseProfilePage() {
     }
 
     fetch(`http://localhost:8000/api/empresas/${empresaId}`, {
-      headers: {
-        Accept: 'application/ld+json',
-      },
+      headers: { Accept: 'application/ld+json' },
     })
       .then(res => {
         if (!res.ok) throw new Error('Error al cargar empresa');
@@ -28,67 +26,67 @@ function EnterpriseProfilePage() {
 
   if (!empresa) {
     return (
-      <div
-        className="d-flex justify-content-center align-items-center text-white"
-        style={{ height: '100vh', backgroundColor: '#000' }}
-      >
-        Cargando perfil de empresa...
-      </div>
-    );
+    <div className="enterprise__loading">
+      <div className="enterprise__spinner"></div>
+      <p>Cargando perfil...</p>
+    </div>)
   }
 
   return (
-    <div style={{ backgroundColor: '#000', minHeight: '100vh', padding: '40px 0' }}>
+    <div className="enterprise-profile">
       <div className="container text-white">
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <h1>{empresa.nombre}</h1>
+        <div className="enterprise-profile__header text-center mb-4">
+          <h1 className="enterprise-profile__name">{empresa.nombre}</h1>
+          <p className="enterprise-profile__description">
+            {empresa.descripcion || 'Sin descripción.'}
+          </p>
           <button
-            className="btn btn-outline-success mt-4"
+            className="btn btn-success rounded-pill px-4 py-2 mt-3 enterprise-profile__edit-button"
             onClick={() => navigate('/editar-perfil-empresa')}
           >
             Editar Perfil
           </button>
         </div>
-        <p className="fs-5 mb-4 fst-italic">{empresa.descripcion || 'Sin descripción.'}</p>
+
         <div className="row g-4">
           <div className="col-md-6">
-            <div className="card bg-dark text-white shadow h-100 p-3">
-              <h5>Email</h5>
-              <p>{empresa.email}</p>
+            <div className="enterprise-card">
+              <h5 className="enterprise-card__title">Email</h5>
+              <p className="enterprise-card__text">{empresa.email}</p>
             </div>
           </div>
           <div className="col-md-6">
-            <div className="card bg-dark text-white shadow h-100 p-3">
-              <h5>Teléfono</h5>
-              <p>{empresa.telefono || 'No especificado'}</p>
+            <div className="enterprise-card">
+              <h5 className="enterprise-card__title">Teléfono</h5>
+              <p className="enterprise-card__text">{empresa.telefono || 'No especificado'}</p>
             </div>
           </div>
           <div className="col-md-6">
-            <div className="card bg-dark text-white shadow h-100 p-3">
-              <h5>Sector</h5>
-              <p>{empresa.sector || 'No especificado'}</p>
+            <div className="enterprise-card">
+              <h5 className="enterprise-card__title">Sector</h5>
+              <p className="enterprise-card__text">{empresa.sector || 'No especificado'}</p>
             </div>
           </div>
           <div className="col-md-6">
-            <div className="card bg-dark text-white shadow h-100 p-3">
-              <h5>Número de Empleados</h5>
-              <p>{empresa.num_empleados || 'No especificado'}</p>
+            <div className="enterprise-card">
+              <h5 className="enterprise-card__title">Número de Empleados</h5>
+              <p className="enterprise-card__text">{empresa.num_empleados || 'No especificado'}</p>
             </div>
           </div>
           <div className="col-md-12">
-            <div className="card bg-dark text-white shadow h-100 p-3">
-              <h5>Sitio Web</h5>
+            <div className="enterprise-card">
+              <h5 className="enterprise-card__title">Sitio Web</h5>
               {empresa.sitio_web ? (
                 <a
                   href={empresa.sitio_web}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-success text-decoration-underline"
+                  className="enterprise-card__link"
                 >
                   {empresa.sitio_web}
                 </a>
               ) : (
-                <p>No proporcionado</p>
+                <p className="enterprise-card__text">No proporcionado</p>
               )}
             </div>
           </div>

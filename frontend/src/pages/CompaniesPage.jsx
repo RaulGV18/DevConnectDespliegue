@@ -1,12 +1,15 @@
-// src/pages/CompaniesPage.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import companyImg from '../img/ejemploempresa.png'; // Imagen genérica
+import companyImg from '../img/ejemploempresa.png';
+import '../styles/CompaniesPage.css';
 
 function CompaniesPage() {
   const [companies, setCompanies] = useState([]);
+  const [filteredCompanies, setFilteredCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const companiesPerPage = 6;
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -18,8 +21,9 @@ function CompaniesPage() {
         const data = await res.json();
         const companiesList = data.member || [];
         setCompanies(companiesList);
+        setFilteredCompanies(companiesList);
       } catch (err) {
-        setError(err.message);
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -28,66 +32,88 @@ function CompaniesPage() {
     fetchCompanies();
   }, []);
 
-  if (loading) return <div className="container py-5 text-white">Cargando empresas...</div>;
-  if (error) return <div className="container py-5 text-danger">Error: {error}</div>;
+  const handleSearch = (e) => {
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
+    const filtered = companies.filter((c) =>
+      c.nombre?.toLowerCase().includes(value)
+    );
+    setFilteredCompanies(filtered);
+    setCurrentPage(1);
+  };
+
+  const totalPages = Math.ceil(filteredCompanies.length / companiesPerPage);
+  const startIndex = (currentPage - 1) * companiesPerPage;
+  const displayedCompanies = filteredCompanies.slice(startIndex, startIndex + companiesPerPage);
+
+  if (loading) {
+    return (
+      <div className="companies__loading">
+        <div className="companies__spinner"></div>
+        <p>Cargando empresas...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="container py-5">
-      <h1 className="mb-4" style={{ color: '#fff' }}>Empresas</h1>
+    <div className="companies">
+      <div className="companies__container">
+        <h1 className="companies__title">Empresas</h1>
 
-      <div className="row">
-        {companies.length === 0 && (
-          <p style={{ color: '#fff' }}>No hay empresas disponibles.</p>
+        <input
+          type="text"
+          className="companies__search"
+          placeholder="Buscar por nombre..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+
+        {displayedCompanies.length === 0 ? (
+          <p className="companies__no-results">No hay empresas disponibles.</p>
+        ) : (
+          <div className="companies__grid">
+            {displayedCompanies.map((company) => (
+              <div key={company.id} className="companies__card">
+                <img
+                  src={companyImg}
+                  alt={company.nombre || 'Empresa'}
+                  className="companies__image"
+                />
+                <h5 className="companies__name">{company.nombre}</h5>
+                <p className="companies__info"><strong>Empleados:</strong> {company.num_empleados || 'N/A'}</p>
+                <p className="companies__info"><strong>Teléfono:</strong> {company.telefono || 'N/A'}</p>
+                <p className="companies__info"><strong>Descripción:</strong> {company.descripcion || 'Sin descripción.'}</p>
+                <p className="companies__info">
+                  <strong>Sitio web:</strong>{' '}
+                  {company.sitio_web ? (
+                    <a href={company.sitio_web} target="_blank" rel="noreferrer">
+                      {company.sitio_web}
+                    </a>
+                  ) : (
+                    'N/A'
+                  )}
+                </p>
+                <Link to={`/empresas/perfil/${company.id}`} className="companies__link">
+                  Ver perfil
+                </Link>
+              </div>
+            ))}
+          </div>
         )}
 
-        {companies.map((company) => (
-          <div key={company.id} className="col-md-4 mb-3">
-            <div
-              className="card h-100 shadow text-center d-flex flex-column"
-              style={{
-                backgroundColor: '#d6d6d6',
-                border: '1px solid #ccc',
-                padding: '15px',
-              }}
-            >
-              <img
-                src={companyImg}
-                alt={company.nombre || 'Empresa'}
-                className="img-fluid rounded-circle mx-auto"
-                style={{
-                  width: '150px',
-                  height: '150px',
-                  objectFit: 'cover',
-                }}
-              />
-              <h5 className="card-title mt-3" style={{ color: '#000' }}>
-                {company.nombre}
-              </h5>
-              <p className="card-text" style={{ color: '#000' }}>
-                <strong>Número de empleados:</strong> {company.num_empleados || 'N/A'}
-              </p>
-              <p className="card-text" style={{ color: '#000' }}>
-                <strong>Teléfono:</strong> {company.telefono || 'N/A'}
-              </p>
-              <p className="card-text" style={{ color: '#000', textAlign: 'left' }}>
-                <strong>Descripción:</strong> {company.descripcion || 'No hay descripción disponible.'}
-              </p>
-              <p className="card-text" style={{ color: '#000' }}>
-                <strong>Sitio web:</strong>{' '}
-                {company.sitio_web ? (
-                  <a href={company.sitio_web} target="_blank" rel="noreferrer">
-                    {company.sitio_web}
-                  </a>
-                ) : (
-                  'N/A'
-                )}
-              </p>
-              <Link to={`/empresas/perfil/${company.id}`} className="btn btn-outline-success mt-auto">
-                Ver perfil
-              </Link>
-            </div>
+        {totalPages > 1 && (
+          <div className="companies__pagination">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                className={`companies__page-btn ${currentPage === i + 1 ? 'companies__page-btn--active' : ''}`}
+                onClick={() => setCurrentPage(i + 1)}
+              >
+                {i + 1}
+              </button>
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

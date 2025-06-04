@@ -1,6 +1,6 @@
-// src/pages/EnterpriseJobOffersPage.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles/EnterpriseJobOffersPage.css';
 
 function EnterpriseJobOffersPage() {
   const navigate = useNavigate();
@@ -26,7 +26,6 @@ function EnterpriseJobOffersPage() {
         return res.json();
       })
       .then(data => {
-        // Usamos data.member según el JSON que diste
         setOffers(data.member || []);
         setLoading(false);
       })
@@ -54,16 +53,20 @@ function EnterpriseJobOffersPage() {
       });
   };
 
-  if (loading) return <div className="container py-5 text-white">Cargando ofertas...</div>;
-  if (error) return <div className="container py-5 text-white">Error: {error}</div>;
+  if (loading) return (
+    <div className="enterprise__loading">
+      <div className="enterprise__spinner"></div>
+      <p>Cargando ofertas...</p>
+    </div>);
+  if (error) return <div className="enterprise-offers__error">Error: {error}</div>;
 
   return (
-    <div className="container py-5">
-      <h1 className="mb-4 text-white">Mis Ofertas de Empleo</h1>
+    <div className="enterprise-offers">
+      <h1 className="enterprise-offers__title">Mis Ofertas de Empleo</h1>
 
-      <div className="mb-4">
+      <div className="enterprise-offers__actions">
         <button
-          className="btn btn-success"
+          className="enterprise-offers__add-btn"
           onClick={() => navigate('/añadir-oferta')}
         >
           Añadir Oferta
@@ -71,46 +74,38 @@ function EnterpriseJobOffersPage() {
       </div>
 
       {offers.length === 0 ? (
-        <p className="text-white">No tienes ofertas laborales publicadas.</p>
+        <p className="enterprise-offers__no-data">No tienes ofertas laborales publicadas.</p>
       ) : (
         offers.map(offer => (
-          <div
-            key={offer.id}
-            className="card mb-3"
-            style={{ backgroundColor: '#d6d6d6', border: '1px solid #ccc' }}
-          >
-            <div className="card-body">
-              <h5 className="card-title" style={{ color: '#000' }}>
-                {offer.titulo}
-              </h5>
-              <p className="card-text" style={{ color: '#000' }}>
-                {offer.descripcion}
-              </p>
-              <p className="card-text" style={{ color: '#000' }}>
+          <div key={offer.id} className="enterprise-offers__card">
+            <div className="enterprise-offers__card-body">
+              <h5 className="enterprise-offers__card-title">{offer.titulo}</h5>
+              <p className="enterprise-offers__card-text">{offer.descripcion}</p>
+              <p className="enterprise-offers__card-text">
                 <strong>Tecnologías Requeridas:</strong> {offer.tecnologias_requeridas}
               </p>
-              <p className="card-text" style={{ color: '#000' }}>
+              <p className="enterprise-offers__card-text">
                 <strong>Experiencia Mínima:</strong> {offer.experiencia_minima}
               </p>
-              <p className="card-text" style={{ color: '#000' }}>
+              <p className="enterprise-offers__card-text">
                 <strong>Ubicación:</strong> {offer.ubicacion}
               </p>
 
-              <div className="d-flex">
+              <div className="enterprise-offers__buttons">
                 <button
-                  className="btn btn-warning me-2"
+                  className="enterprise-offers__btn enterprise-offers__btn--edit"
                   onClick={() => navigate(`/editar-oferta/${offer.id}`)}
                 >
                   Modificar Oferta
                 </button>
                 <button
-                  className="btn btn-outline-success me-2"
+                  className="enterprise-offers__btn enterprise-offers__btn--view"
                   onClick={() => navigate(`/oferta-candidatos/${offer.id}`)}
                 >
                   Ver Candidatos
                 </button>
                 <button
-                  className="btn btn-danger"
+                  className="enterprise-offers__btn enterprise-offers__btn--delete"
                   onClick={() => handleDelete(offer.id)}
                 >
                   Eliminar Oferta

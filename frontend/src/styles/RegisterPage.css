@@ -1,0 +1,133 @@
+/* Fondo oscuro a pantalla completa */
+.register {
+  background-color: #121212;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Contenedor del formulario */
+.register__container {
+  background-color: #1f1f1f;
+  padding: 30px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Título */
+.register__title {
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* Tipo de cuenta */
+.register__account-type {
+  margin-bottom: 24px;
+  color: #ffffff;
+}
+
+.register__account-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.register__account-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.register__account-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.register__radio-label {
+  color: #ffffff;
+  font-size: 14px;
+}
+
+/* Formulario */
+.register__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.register__form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.register__label {
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.register__input {
+  padding: 10px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background-color: #2b2b2b;
+  color: #ffffff;
+  transition: border-color 0.2s;
+}
+
+.register__input:focus {
+  border-color: #00c853;
+  outline: none;
+}
+
+/* Botón */
+.register__submit {
+  background-color: #00c853;
+  color: #ffffff;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.register__submit:hover {
+  background-color: #00b347;
+}
+
+.register__submit:disabled {
+  background-color: #66bb6a;
+  cursor: not-allowed;
+}
+
+/* Error */
+.register__error {
+  color: #ff6b6b;
+  background-color: #2b0000;
+  padding: 10px;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* Footer */
+.register__footer {
+  margin-top: 20px;
+  text-align: center;
+  color: #cccccc;
+  font-size: 14px;
+}
+
+.register__login-link {
+  color: #00c853;
+  text-decoration: underline;
+}
+
+.register__login-link:hover {
+  color: #00e676;
+}

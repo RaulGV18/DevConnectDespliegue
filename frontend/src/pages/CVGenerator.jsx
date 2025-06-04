@@ -57,7 +57,12 @@ const CVGenerator = () => {
 
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
-      window.open(url, '_blank');
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'CV.pdf';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     } catch (err) {
       console.error('Error al enviar datos:', err);
     } finally {
@@ -66,92 +71,82 @@ const CVGenerator = () => {
   };
 
   return (
-    <div className="cv-generator container my-5">
-      <h2 className="cv-generator__main-title mb-4">Generador de CV</h2>
-      <div className="cv-generator__content row">
-        <div className="cv-generator__form col-md-6">
-          <label htmlFor="nombre" className="cv-generator__label">Nombre completo</label>
-          <input
-            id="nombre"
-            name="nombre"
-            className="cv-generator__input form-control mb-3"
-            value={data.nombre}
-            onChange={handleChange}
-          />
+    <div className="cv-generator">
+      <h2 className="cv-generator__title">Generador de CV</h2>
+      <form className="cv-generator__form" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+        <label className="cv-generator__label">Nombre completo</label>
+        <input
+          name="nombre"
+          value={data.nombre}
+          onChange={handleChange}
+          className="cv-generator__input"
+        />
 
-          <label htmlFor="email" className="cv-generator__label">Email</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            className="cv-generator__input form-control mb-3"
-            value={data.email}
-            onChange={handleChange}
-          />
+        <label className="cv-generator__label">Email</label>
+        <input
+          name="email"
+          type="email"
+          value={data.email}
+          onChange={handleChange}
+          className="cv-generator__input"
+        />
 
-          <label htmlFor="telefono" className="cv-generator__label">Teléfono</label>
-          <input
-            id="telefono"
-            name="telefono"
-            className="cv-generator__input form-control mb-3"
-            value={data.telefono}
-            onChange={handleChange}
-          />
+        <label className="cv-generator__label">Teléfono</label>
+        <input
+          name="telefono"
+          value={data.telefono}
+          onChange={handleChange}
+          className="cv-generator__input"
+        />
 
-          <label htmlFor="perfil" className="cv-generator__label">Perfil profesional</label>
-          <textarea
-            id="perfil"
-            name="perfil"
-            className="cv-generator__textarea form-control mb-3"
-            value={data.perfil}
-            onChange={handleChange}
-          />
+        <label className="cv-generator__label">Perfil profesional</label>
+        <textarea
+          name="perfil"
+          value={data.perfil}
+          onChange={handleChange}
+          className="cv-generator__textarea"
+        />
 
-          <label htmlFor="experiencia" className="cv-generator__label">Experiencia laboral</label>
-          <textarea
-            id="experiencia"
-            name="experiencia"
-            className="cv-generator__textarea form-control mb-3"
-            value={data.experiencia}
-            onChange={handleChange}
-          />
+        <label className="cv-generator__label">Experiencia laboral</label>
+        <textarea
+          name="experiencia"
+          value={data.experiencia}
+          onChange={handleChange}
+          className="cv-generator__textarea"
+        />
 
-          <label htmlFor="educacion" className="cv-generator__label">Educación</label>
-          <textarea
-            id="educacion"
-            name="educacion"
-            className="cv-generator__textarea form-control mb-3"
-            value={data.educacion}
-            onChange={handleChange}
-          />
+        <label className="cv-generator__label">Educación</label>
+        <textarea
+          name="educacion"
+          value={data.educacion}
+          onChange={handleChange}
+          className="cv-generator__textarea"
+        />
 
-          <label htmlFor="habilidades" className="cv-generator__label">Habilidades</label>
-          <textarea
-            id="habilidades"
-            name="habilidades"
-            className="cv-generator__textarea form-control mb-3"
-            value={data.habilidades}
-            onChange={handleChange}
-          />
+        <label className="cv-generator__label">Habilidades</label>
+        <textarea
+          name="habilidades"
+          value={data.habilidades}
+          onChange={handleChange}
+          className="cv-generator__textarea"
+        />
 
-          <label htmlFor="foto" className="cv-generator__label">Foto (opcional)</label>
-          <input
-            id="foto"
-            type="file"
-            accept="image/*"
-            className="cv-generator__file-input form-control mb-3"
-            onChange={handleFotoChange}
-          />
+        <label className="cv-generator__label">Foto (opcional)</label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFotoChange}
+          className="cv-generator__file"
+        />
 
-          <button
-            className="cv-generator__button btn btn-primary"
-            onClick={handleSubmit}
-            disabled={subiendo}
-          >
-            {subiendo ? 'Generando...' : 'Generar PDF'}
-          </button>
-        </div>
-      </div>
+        <button
+          className="cv-generator__button"
+          type="submit"
+          disabled={subiendo}
+        >
+          {subiendo ? 'Generando...' : 'Generar PDF'}
+        </button>
+      </form>
     </div>
   );
 };
