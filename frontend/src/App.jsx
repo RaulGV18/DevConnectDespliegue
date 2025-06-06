@@ -2,6 +2,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ModeProvider } from './ModeContext';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 
 import Header from './components/Header';

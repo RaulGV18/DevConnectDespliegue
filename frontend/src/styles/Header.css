@@ -1,0 +1,39 @@
+.header {
+  width: 100%;
+}
+
+.header__navbar {
+  background-color: #343a40;
+}
+
+.header__brand {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.header__menu {
+  justify-content: space-between;
+}
+
+.header__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.header__actions {
+  gap: 0.5rem;
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 768px) {
+  .header__links {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .header__actions {
+    flex-direction: column;
+    margin-top: 1rem;
+  }
+}

@@ -38,7 +38,7 @@ function ProfilePage() {
   return (
     <div className="profile-page">
       <div className="container">
-        <div className="row align-items-center profile-page__header">
+        <div className="row profile-page__header d-flex align-items-center">
           <div className="col-md-3 text-center">
             <img
               src={usuario.foto_perfil || profileImg}

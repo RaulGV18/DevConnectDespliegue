@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useMode } from '../ModeContext';
+import '../styles/Header.css'; // Importamos el CSS externo
 
 function Header() {
   const { mode, toggleMode } = useMode();
@@ -33,27 +34,16 @@ function Header() {
     ];
 
     if (!mode) return;
-
     const path = decodeURIComponent(location.pathname);
 
     if (rutasPublicas.includes(path)) return;
 
     if (mode === 'empresa') {
-      const rutaValida = rutasEmpresa.some(
-        (ruta) => path === ruta || path.startsWith(ruta + '/')
-      );
-      if (!rutaValida) {
-        console.log('Redirigiendo a /enterprise-main-page desde ruta inválida:', path);
-        navigate('/enterprise-main-page');
-      }
+      const rutaValida = rutasEmpresa.some((ruta) => path === ruta || path.startsWith(ruta + '/'));
+      if (!rutaValida) navigate('/enterprise-main-page');
     } else if (mode === 'cliente') {
-      const rutaValida = rutasCliente.some(
-        (ruta) => path === ruta || path.startsWith(ruta + '/')
-      );
-      if (!rutaValida) {
-        console.log('Redirigiendo a / desde ruta inválida:', path);
-        navigate('/');
-      }
+      const rutaValida = rutasCliente.some((ruta) => path === ruta || path.startsWith(ruta + '/'));
+      if (!rutaValida) navigate('/');
     }
   }, [mode, location.pathname, navigate]);
 
@@ -63,7 +53,6 @@ function Header() {
     } else {
       localStorage.removeItem('usuarioId');
     }
-
     localStorage.removeItem('token');
     navigate('/login');
   };
@@ -77,15 +66,11 @@ function Header() {
     }
   };
 
-  const headerStyle = {
-    backgroundColor: '#343a40',
-  };
-
   return (
-    <header>
-      <nav className="navbar navbar-expand-lg navbar-dark" style={headerStyle}>
+    <header className="header">
+      <nav className="header__navbar navbar navbar-expand-lg navbar-dark">
         <div className="container">
-          <Link className="navbar-brand" to={mode === 'empresa' ? '/enterprise-main-page' : '/'}>
+          <Link className="header__brand navbar-brand" to={mode === 'empresa' ? '/enterprise-main-page' : '/'}>
             DevConnect {mode === 'empresa' && '(Empresa)'}
           </Link>
           <button
@@ -99,8 +84,8 @@ function Header() {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+          <div className="collapse navbar-collapse header__menu" id="navbarNav">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0 header__links">
               {isLoggedIn && (
                 <>
                   {mode === 'empresa' ? (
@@ -135,7 +120,7 @@ function Header() {
                       </li>
                       <li className="nav-item">
                         <Link className="nav-link" to="/generador-cv">
-                          <i className="bi bi-file-earmark-person me-1"></i> Generar CV
+                          <i className="bi bi-file-earmark-person me-1"></i>Generar CV
                         </Link>
                       </li>
                     </>
@@ -144,28 +129,30 @@ function Header() {
               )}
             </ul>
 
-            {isLoggedIn ? (
-              <div className="d-flex align-items-center">
-                <button onClick={handleLogout} className="btn btn-outline-danger me-2">
-                  Cerrar Sesión
-                </button>
-                <button onClick={handleToggleMode} className="btn btn-warning">
-                  {mode === 'cliente' ? 'Modo Empresa' : 'Modo Cliente'}
-                </button>
-              </div>
-            ) : (
-              <div className="d-flex align-items-center">
-                <Link to="/login" className="btn btn-outline-success me-2">
-                  Iniciar Sesión
-                </Link>
-                <Link to="/register" className="btn btn-outline-success me-2">
-                  Registrarse
-                </Link>
-                <button onClick={handleToggleMode} className="btn btn-warning">
-                  {mode === 'cliente' ? 'Modo Empresa' : 'Modo Cliente'}
-                </button>
-              </div>
-            )}
+            <div className="header__actions d-flex align-items-center">
+              {isLoggedIn ? (
+                <>
+                  <button onClick={handleLogout} className="btn btn-outline-danger me-2">
+                    Cerrar Sesión
+                  </button>
+                  <button onClick={handleToggleMode} className="btn btn-warning">
+                    {mode === 'cliente' ? 'Modo Empresa' : 'Modo Cliente'}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" className="btn btn-outline-success me-2">
+                    Iniciar Sesión
+                  </Link>
+                  <Link to="/register" className="btn btn-outline-success me-2">
+                    Registrarse
+                  </Link>
+                  <button onClick={handleToggleMode} className="btn btn-warning">
+                    {mode === 'cliente' ? 'Modo Empresa' : 'Modo Cliente'}
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </nav>
