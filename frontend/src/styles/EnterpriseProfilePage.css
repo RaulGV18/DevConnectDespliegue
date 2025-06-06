@@ -146,3 +146,22 @@
     transform: rotate(360deg);
   }
 }
+.enterprise-profile__image-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.enterprise-profile__image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #28a745;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+  transition: transform 0.3s ease;
+}
+
+.enterprise-profile__image:hover {
+  transform: scale(1.05);
+}

@@ -74,3 +74,19 @@
 .edit-enterprise-profile__button:hover {
   background-color: #218838;
 }
+.edit-enterprise-profile__image-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.edit-enterprise-profile__preview-image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #ccc;
+  margin-bottom: 0.5rem;
+}
+

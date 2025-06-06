@@ -29,10 +29,6 @@ class Usuario
 
     #[ORM\Column(length: 255)]
     private ?string $email = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $foto_perfil = null;
-
     /**
      * @var Collection<int, Postulacion>
      */
@@ -102,18 +98,6 @@ class Usuario
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
-        return $this;
-    }
-
-    public function getFotoPerfil(): ?string
-    {
-        return $this->foto_perfil;
-    }
-
-    public function setFotoPerfil(?string $foto_perfil): static
-    {
-        $this->foto_perfil = $foto_perfil;
 
         return $this;
     }

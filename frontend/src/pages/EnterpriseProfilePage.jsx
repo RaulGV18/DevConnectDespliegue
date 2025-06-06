@@ -5,15 +5,17 @@ import '../styles/EnterpriseProfilePage.css';
 function EnterpriseProfilePage() {
   const navigate = useNavigate();
   const [empresa, setEmpresa] = useState(null);
+  const [empresaId, setEmpresaId] = useState(null);
 
   useEffect(() => {
-    const empresaId = localStorage.getItem('empresaId');
-    if (!empresaId) {
+    const id = localStorage.getItem('empresaId');
+    if (!id) {
       navigate('/login');
       return;
     }
+    setEmpresaId(id);
 
-    fetch(`http://localhost:8000/api/empresas/${empresaId}`, {
+    fetch(`http://localhost:8000/api/empresas/${id}`, {
       headers: { Accept: 'application/ld+json' },
     })
       .then(res => {
@@ -26,16 +28,29 @@ function EnterpriseProfilePage() {
 
   if (!empresa) {
     return (
-    <div className="enterprise__loading">
-      <div className="enterprise__spinner"></div>
-      <p>Cargando perfil...</p>
-    </div>)
+      <div className="enterprise__loading">
+        <div className="enterprise__spinner"></div>
+        <p>Cargando perfil...</p>
+      </div>
+    );
   }
 
   return (
     <div className="enterprise-profile">
       <div className="container text-white">
         <div className="enterprise-profile__header text-center mb-4">
+          {empresaId && (
+            <div className="enterprise-profile__image-wrapper">
+              <img
+                src={`http://localhost:8000/uploads/fotos/empresa_${empresaId}.jpg?${Date.now()}`}
+                alt="Foto de la empresa"
+                className="enterprise-profile__image"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                }}
+              />
+            </div>
+          )}
           <h1 className="enterprise-profile__name">{empresa.nombre}</h1>
           <p className="enterprise-profile__description">
             {empresa.descripcion || 'Sin descripción.'}

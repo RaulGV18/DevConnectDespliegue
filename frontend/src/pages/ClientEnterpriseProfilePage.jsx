@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import companyPlaceholder from '../img/ejemploempresa.png';
 import '../styles/ClientEnterpriseProfilePage.css';
 
 function ClientEnterpriseProfilePage() {
@@ -34,17 +35,29 @@ function ClientEnterpriseProfilePage() {
   }
 
   if (!empresa) {
-        return (
-    <div className="enterprise__loading">
-      <div className="enterprise__spinner"></div>
-      <p>Cargando perfil...</p>
-    </div>)
+    return (
+      <div className="enterprise__loading">
+        <div className="enterprise__spinner"></div>
+        <p>Cargando perfil...</p>
+      </div>
+    );
   }
+
+  const imageUrl = `http://localhost:8000/uploads/fotos/empresa_${id}.jpg?${Date.now()}`;
 
   return (
     <div className="enterprise-profile">
       <div className="container">
-        <div className="enterprise-profile__header">
+        <div className="enterprise-profile__header text-center mb-4">
+          <img
+            src={imageUrl}
+            alt={empresa.nombre || 'Empresa'}
+            className="enterprise-profile__image mb-3"
+            onError={(e) => {
+              e.currentTarget.onerror = null; // evitar loop infinito
+              e.currentTarget.src = companyPlaceholder;
+            }}
+          />
           <h1 className="enterprise-profile__name">{empresa.nombre}</h1>
           <p className="enterprise-profile__description">
             {empresa.descripcion || 'Sin descripción.'}
@@ -74,9 +87,7 @@ function ClientEnterpriseProfilePage() {
             <div className="col-md-6 d-flex">
               <article className="enterprise-card flex-fill">
                 <h3 className="enterprise-card__title">Número de Empleados</h3>
-                <p className="enterprise-card__text">
-                  {empresa.num_empleados || 'No especificado'}
-                </p>
+                <p className="enterprise-card__text">{empresa.num_empleados || 'No especificado'}</p>
               </article>
             </div>
             <div className="col-md-12 d-flex">

@@ -5,6 +5,7 @@ import '../styles/EditProfilePage.css';
 function EditProfilePage() {
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState(null);
+  const [fotoPreview, setFotoPreview] = useState(null);
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
@@ -39,6 +40,8 @@ function EditProfilePage() {
           github: data.github || '',
           descripcion: data.descripcion || '',
         });
+        // Cargar imagen si existe
+        setFotoPreview(`http://localhost:8000/uploads/fotos/usuario_${usuarioId}.jpg?${Date.now()}`);
       })
       .catch(() => navigate('/login'));
   }, [navigate, usuarioId]);
@@ -70,6 +73,34 @@ function EditProfilePage() {
       });
   };
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formDataImg = new FormData();
+    formDataImg.append('fotoPerfil', file);
+
+    fetch(`http://localhost:8000/subir-foto/${usuarioId}`, {
+      method: 'POST',
+      body: formDataImg,
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error('Error en la respuesta:', errorText);
+          throw new Error(`Error al subir imagen: ${res.status} ${res.statusText} - ${errorText}`);
+        }
+        return res.json();
+      })
+      .then(() => {
+        setFotoPreview(`http://localhost:8000/uploads/fotos/usuario_${usuarioId}.jpg?${Date.now()}`);
+      })
+      .catch((err) => {
+        console.error('Error al subir la imagen:', err);
+        alert(`Error al subir la imagen: ${err.message}`);
+      });
+  };
+
   if (!usuario) {
     return (
       <div className="profile-page__loading">
@@ -82,6 +113,16 @@ function EditProfilePage() {
   return (
     <div className="edit-profile">
       <h2 className="edit-profile__title">Editar Perfil</h2>
+
+      <div className="edit-profile__image-upload">
+        <img
+          src={fotoPreview || 'https://via.placeholder.com/150'}
+          alt="Foto de perfil"
+          className="edit-profile__preview-image"
+        />
+        <input type="file" accept="image/*" onChange={handleImageUpload} />
+      </div>
+
       <form onSubmit={handleSubmit} className="edit-profile__form">
         <div className="edit-profile__form-group">
           <label className="edit-profile__label">Nombre</label>

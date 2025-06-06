@@ -6,9 +6,9 @@ import '../styles/ProfilePage.css'; // Importa el CSS separado
 function ProfilePage() {
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState(null);
+  const usuarioId = localStorage.getItem('usuarioId');
 
   useEffect(() => {
-    const usuarioId = localStorage.getItem('usuarioId');
     if (!usuarioId) {
       navigate('/login');
       return;
@@ -25,15 +25,19 @@ function ProfilePage() {
       })
       .then((data) => setUsuario(data))
       .catch(() => navigate('/login'));
-  }, [navigate]);
+  }, [navigate, usuarioId]);
 
   if (!usuario) {
     return (
-    <div className="profile-page__loading">
-      <div className="profile-page__spinner"></div>
-      <p>Cargando perfil...</p>
-    </div>)
+      <div className="profile-page__loading">
+        <div className="profile-page__spinner"></div>
+        <p>Cargando perfil...</p>
+      </div>
+    );
   }
+
+  // Ruta fija para la imagen basada en usuarioId con timestamp para evitar cache
+  const fotoPerfilUrl = `http://localhost:8000/uploads/fotos/usuario_${usuarioId}.jpg?${Date.now()}`;
 
   return (
     <div className="profile-page">
@@ -41,10 +45,14 @@ function ProfilePage() {
         <div className="row profile-page__header d-flex align-items-center">
           <div className="col-md-3 text-center">
             <img
-              src={usuario.foto_perfil || profileImg}
+              src={fotoPerfilUrl}
               alt="Imagen de Perfil"
               className="profile-page__image rounded-circle border border-success"
               style={{ width: '200px', height: '200px', objectFit: 'cover' }}
+              onError={(e) => {
+                e.target.onerror = null; // evita loop infinito
+                e.target.src = profileImg; // si falla, imagen por defecto
+              }}
             />
           </div>
           <div className="col-md-9 text-white">

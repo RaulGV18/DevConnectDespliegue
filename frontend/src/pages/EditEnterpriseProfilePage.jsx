@@ -14,6 +14,7 @@ function EditEnterpriseProfilePage() {
     telefono: '',
   });
   const [error, setError] = useState(null);
+  const [fotoPreview, setFotoPreview] = useState(null);
 
   useEffect(() => {
     const empresaId = localStorage.getItem('empresaId');
@@ -41,6 +42,8 @@ function EditEnterpriseProfilePage() {
           num_empleados: data.num_empleados || '',
           telefono: data.telefono || '',
         });
+
+        setFotoPreview(`http://localhost:8000/uploads/fotos/empresa_${empresaId}.jpg?${Date.now()}`);
       })
       .catch((err) => {
         console.error(err);
@@ -77,10 +80,51 @@ function EditEnterpriseProfilePage() {
       });
   };
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const empresaId = localStorage.getItem('empresaId');
+    if (!empresaId) return;
+
+    const formDataImg = new FormData();
+    formDataImg.append('fotoPerfil', file);
+
+    fetch(`http://localhost:8000/subir-foto-empresa/${empresaId}`, {
+      method: 'POST',
+      body: formDataImg,
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`Error al subir imagen: ${res.status} ${res.statusText} - ${errorText}`);
+        }
+        return res.json();
+      })
+      .then(() => {
+        setFotoPreview(`http://localhost:8000/uploads/fotos/empresa_${empresaId}.jpg?${Date.now()}`);
+      })
+      .catch((err) => {
+        console.error('Error al subir la imagen:', err);
+        alert(`Error al subir la imagen: ${err.message}`);
+      });
+  };
+
   return (
     <div className="edit-enterprise-profile__container">
       <h1 className="edit-enterprise-profile__title">Editar Perfil de Empresa</h1>
+
       {error && <div className="alert alert-danger edit-enterprise-profile__alert">{error}</div>}
+
+      <div className="edit-enterprise-profile__image-upload">
+        <img
+          src={fotoPreview || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150"><rect width="150" height="150" fill="%23ccc"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23666" font-size="20">No Image</text></svg>'}
+          alt="Logo de la empresa"
+          className="edit-enterprise-profile__preview-image"
+        />
+        <input type="file" accept="image/*" onChange={handleImageUpload} />
+      </div>
+
       <form className="edit-enterprise-profile__form" onSubmit={handleSubmit}>
         <div className="edit-enterprise-profile__form-group">
           <label className="edit-enterprise-profile__label">Nombre</label>

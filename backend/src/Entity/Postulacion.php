@@ -2,22 +2,18 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PostulacionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostulacionRepository::class)]
+#[ApiResource]
 class Postulacion
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $cvFileName = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTime $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'postulaciones')]
     #[ORM\JoinColumn(nullable: false)]
@@ -30,30 +26,6 @@ class Postulacion
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getCvFileName(): ?string
-    {
-        return $this->cvFileName;
-    }
-
-    public function setCvFileName(?string $cvFileName): static
-    {
-        $this->cvFileName = $cvFileName;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTime
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTime $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
     }
 
     public function getUsuario(): ?Usuario

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import companyImg from '../img/ejemploempresa.png';
+import companyPlaceholder from '../img/ejemploempresa.png'; // placeholder local
 import '../styles/CompaniesPage.css';
 
 function CompaniesPage() {
@@ -72,32 +72,40 @@ function CompaniesPage() {
           <p className="companies__no-results">No hay empresas disponibles.</p>
         ) : (
           <div className="companies__grid">
-            {displayedCompanies.map((company) => (
-              <div key={company.id} className="companies__card">
-                <img
-                  src={companyImg}
-                  alt={company.nombre || 'Empresa'}
-                  className="companies__image"
-                />
-                <h5 className="companies__name">{company.nombre}</h5>
-                <p className="companies__info"><strong>Empleados:</strong> {company.num_empleados || 'N/A'}</p>
-                <p className="companies__info"><strong>Teléfono:</strong> {company.telefono || 'N/A'}</p>
-                <p className="companies__info"><strong>Descripción:</strong> {company.descripcion || 'Sin descripción.'}</p>
-                <p className="companies__info">
-                  <strong>Sitio web:</strong>{' '}
-                  {company.sitio_web ? (
-                    <a href={company.sitio_web} target="_blank" rel="noreferrer">
-                      {company.sitio_web}
-                    </a>
-                  ) : (
-                    'N/A'
-                  )}
-                </p>
-                <Link to={`/empresas/perfil/${company.id}`} className="companies__link">
-                  Ver perfil
-                </Link>
-              </div>
-            ))}
+            {displayedCompanies.map((company) => {
+              const imageUrl = `http://localhost:8000/uploads/fotos/empresa_${company.id}.jpg?${Date.now()}`;
+
+              return (
+                <div key={company.id} className="companies__card">
+                  <img
+                    src={imageUrl}
+                    alt={company.nombre || 'Empresa'}
+                    className="companies__image"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null; // evitar loop infinito
+                      e.currentTarget.src = companyPlaceholder;
+                    }}
+                  />
+                  <h5 className="companies__name">{company.nombre}</h5>
+                  <p className="companies__info"><strong>Empleados:</strong> {company.num_empleados || 'N/A'}</p>
+                  <p className="companies__info"><strong>Teléfono:</strong> {company.telefono || 'N/A'}</p>
+                  <p className="companies__info"><strong>Descripción:</strong> {company.descripcion || 'Sin descripción.'}</p>
+                  <p className="companies__info">
+                    <strong>Sitio web:</strong>{' '}
+                    {company.sitio_web ? (
+                      <a href={company.sitio_web} target="_blank" rel="noreferrer">
+                        {company.sitio_web}
+                      </a>
+                    ) : (
+                      'N/A'
+                    )}
+                  </p>
+                  <Link to={`/empresas/perfil/${company.id}`} className="companies__link">
+                    Ver perfil
+                  </Link>
+                </div>
+              );
+            })}
           </div>
         )}
 
