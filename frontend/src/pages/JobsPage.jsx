@@ -5,72 +5,98 @@ import '../styles/JobsPage.css';
 function JobsPage() {
   const [ofertas, setOfertas] = useState([]);
   const [empresas, setEmpresas] = useState({});
+  const [postulaciones, setPostulaciones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
+  const usuarioId = localStorage.getItem('usuarioId');
+  const usuarioRef = `/api/usuarios/${usuarioId}`;
+
   useEffect(() => {
-    fetch('http://localhost:8000/api/ofertalaborals', {
-      headers: { Accept: 'application/ld+json' },
-    })
-      .then(res => {
-        if (!res.ok) throw new Error('Error al cargar las ofertas');
-        return res.json();
-      })
-      .then(async (data) => {
-        const ofertasData = data.member || [];
+    const fetchData = async () => {
+      try {
+        const [ofertasRes, postulacionesRes] = await Promise.all([
+          fetch('http://localhost:8000/api/ofertalaborals', {
+            headers: { Accept: 'application/ld+json' },
+          }),
+          fetch('http://localhost:8000/api/postulacions', {
+            headers: { Accept: 'application/ld+json' },
+          }),
+        ]);
+
+        if (!ofertasRes.ok || !postulacionesRes.ok) throw new Error('Error al cargar datos');
+
+        const ofertasData = await ofertasRes.json();
+        const postulacionesData = await postulacionesRes.json();
+
+        const ofertasList = ofertasData.member || [];
+        const postulacionesList = postulacionesData.member || [];
 
         const empresaRefs = [
-          ...new Set(
-            ofertasData
-              .map(oferta => oferta.empresa)
-              .filter(Boolean)
-          ),
+          ...new Set(ofertasList.map(oferta => oferta.empresa).filter(Boolean)),
         ];
-
-        const fetchEmpresaNombre = async (empresaRef) => {
-          try {
-            let url = '';
-            if (typeof empresaRef === 'string') {
-              url = empresaRef.startsWith('http')
-                ? empresaRef
-                : `http://localhost:8000${empresaRef}`;
-            } else if (typeof empresaRef === 'number') {
-              url = `http://localhost:8000/api/empresas/${empresaRef}`;
-            } else {
-              return { nombre: 'Nombre no disponible', id: null };
-            }
-
-            const res = await fetch(url, { headers: { Accept: 'application/ld+json' } });
-            if (!res.ok) return { nombre: 'Nombre no disponible', id: null };
-            const empresaData = await res.json();
-            return { nombre: empresaData.nombre || 'Nombre no disponible', id: empresaData.id };
-          } catch {
-            return { nombre: 'Nombre no disponible', id: null };
-          }
-        };
 
         const empresasMap = {};
         await Promise.all(
           empresaRefs.map(async (empresaRef) => {
-            const { nombre, id } = await fetchEmpresaNombre(empresaRef);
-            empresasMap[empresaRef] = { nombre, id };
+            const url = empresaRef.startsWith('http')
+              ? empresaRef
+              : `http://localhost:8000${empresaRef}`;
+            const res = await fetch(url, {
+              headers: { Accept: 'application/ld+json' },
+            });
+            if (res.ok) {
+              const empresaData = await res.json();
+              empresasMap[empresaRef] = {
+                nombre: empresaData.nombre || 'Nombre no disponible',
+                id: empresaData.id,
+              };
+            }
           })
         );
 
         setEmpresas(empresasMap);
-        setOfertas(ofertasData);
+        setOfertas(ofertasList);
+        setPostulaciones(postulacionesList);
         setLoading(false);
-      })
-      .catch(err => {
+      } catch (err) {
         setError(err.message);
         setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
-  const postularse = (id) => {
-    navigate(`/postular/${id}`);
+  const postularse = (ofertaId) => {
+    navigate(`/postular/${ofertaId}`);
+  };
+
+  const eliminarPostulacion = async (ofertaId) => {
+    const postulacion = postulaciones.find(
+      p => p.usuario === usuarioRef && p.ofertalaboral === `/api/ofertalaborals/${ofertaId}`
+    );
+
+    if (!postulacion) return;
+
+    if (!window.confirm('¿Estás seguro de que quieres eliminar tu postulación?')) return;
+
+    try {
+      const res = await fetch(`http://localhost:8000/api/postulacions/${postulacion.id}`, {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/ld+json',
+        },
+      });
+
+      if (!res.ok) throw new Error('No se pudo eliminar la postulación');
+
+      setPostulaciones(prev => prev.filter(p => p.id !== postulacion.id));
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
   };
 
   const filteredOfertas = ofertas.filter(oferta =>
@@ -108,12 +134,14 @@ function JobsPage() {
         ) : (
           filteredOfertas.map(oferta => {
             const empresa = empresas[oferta.empresa];
+            const yaPostulado = postulaciones.some(
+              p => p.usuario === usuarioRef && p.ofertalaboral === `/api/ofertalaborals/${oferta.id}`
+            );
+
             return (
               <li key={oferta.id} className="jobs-page__item">
                 <div className="jobs-page__card">
-                  <h5 className="jobs-page__titulo">
-                    {oferta.titulo || 'Sin título'}
-                  </h5>
+                  <h5 className="jobs-page__titulo">{oferta.titulo || 'Sin título'}</h5>
                   <p className="jobs-page__empresa">
                     <strong>Empresa:</strong>{' '}
                     {empresa?.id ? (
@@ -128,12 +156,21 @@ function JobsPage() {
                   <p><strong>Tecnologías mínimas requeridas:</strong> {oferta.tecnologiasMinimas || 'No especificado'}</p>
                   <p><strong>Experiencia mínima:</strong> {oferta.experienciaMinima || 'No especificada'}</p>
                   <p><strong>Ubicación:</strong> {oferta.ubicacion || 'No especificada'}</p>
-                  <button
-                    className="btn btn-success mt-3"
-                    onClick={() => postularse(oferta.id)}
-                  >
-                    Aplicar
-                  </button>
+                  {yaPostulado ? (
+                    <button
+                      className="btn btn-danger mt-3"
+                      onClick={() => eliminarPostulacion(oferta.id)}
+                    >
+                      Eliminar Postulación
+                    </button>
+                  ) : (
+                    <button
+                      className="btn btn-success mt-3"
+                      onClick={() => postularse(oferta.id)}
+                    >
+                      Aplicar
+                    </button>
+                  )}
                 </div>
               </li>
             );

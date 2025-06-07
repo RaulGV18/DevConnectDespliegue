@@ -23,6 +23,8 @@ import EditJobOfferPage from './pages/EditJobOfferPage';
 import PostularPage from './pages/PostularPage';
 import CVGenerator from './pages/CVGenerator';
 import ClientEnterpriseProfilePage from './pages/ClientEnterpriseProfilePage';
+import CandidatesPage from './pages/CandidatesPage';
+import CandidateProfile from './pages/CandidateProfile';
 
 function App() {
   return (
@@ -46,6 +48,8 @@ function App() {
   <Route path="/postular/:id" element={<PostularPage />} />
   <Route path="generador-cv" element={<CVGenerator />} />
   <Route path="/empresas/perfil/:id" element={<ClientEnterpriseProfilePage />} />
+  <Route path="/oferta-candidatos/:id" element={<CandidatesPage />} />
+  <Route path="/perfil-candidato/:id" element={<CandidateProfile />} />
   
 </Routes>
         <Footer />

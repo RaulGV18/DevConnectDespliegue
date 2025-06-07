@@ -21,6 +21,8 @@ function Header() {
       '/misofertas',
       '/añadir-oferta',
       '/editar-oferta',
+      '/oferta-candidatos',
+      '/perfil-candidato',
     ];
     const rutasCliente = [
       '/',

@@ -16,7 +16,6 @@ function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [modeLocked, setModeLocked] = useState(false);
 
-  // Detectar si ya hay sesión activa
   useEffect(() => {
     const usuarioId = localStorage.getItem('usuarioId');
     const empresaId = localStorage.getItem('empresaId');
@@ -43,17 +42,48 @@ function RegisterPage() {
     setError('');
     setLoading(true);
 
-    const payload =
-      mode === 'cliente'
-        ? { nombre, apellido, email, password }
-        : { nombre: nombreEmpresa, email, password };
-
-    const endpoint =
-      mode === 'cliente'
-        ? 'http://localhost:8000/api/usuarios'
-        : 'http://localhost:8000/api/empresas';
-
     try {
+      // Primero validamos si existe duplicado
+      if (mode === 'cliente') {
+        const resCheckUsuario = await fetch(
+          `http://localhost:8000/api/usuarios?email=${encodeURIComponent(email)}`
+        );
+        const checkDataUsuario = await resCheckUsuario.json();
+
+        const membersUsuario =
+          checkDataUsuario['hydra:member'] || checkDataUsuario.member || [];
+
+        if (membersUsuario.length > 0) {
+          setError('Ya existe un usuario con ese correo.');
+          setLoading(false);
+          return;
+        }
+      } else {
+        const resCheckEmpresa = await fetch(
+          `http://localhost:8000/api/empresas?nombre=${encodeURIComponent(nombreEmpresa)}`
+        );
+        const checkDataEmpresa = await resCheckEmpresa.json();
+        const membersEmpresa =
+          checkDataEmpresa['hydra:member'] || checkDataEmpresa.member || [];
+
+        if (membersEmpresa.length > 0) {
+          setError('Ya existe una empresa con ese nombre.');
+          setLoading(false);
+          return;
+        }
+      }
+
+      // Si no hay duplicados, hacemos el registro
+      const payload =
+        mode === 'cliente'
+          ? { nombre, apellido, email, password }
+          : { nombre: nombreEmpresa, email, password };
+
+      const endpoint =
+        mode === 'cliente'
+          ? 'http://localhost:8000/api/usuarios'
+          : 'http://localhost:8000/api/empresas';
+
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: {

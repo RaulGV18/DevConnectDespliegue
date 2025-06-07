@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMode } from '../ModeContext';
+import '../styles/PostularPage.css';
 
 function PostularPage() {
-  const { id } = useParams(); // ID de la oferta laboral
+  const { id } = useParams();
   const navigate = useNavigate();
   const { mode } = useMode();
+
   const [cvFile, setCvFile] = useState(null);
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -25,61 +27,83 @@ function PostularPage() {
     setSubmitting(true);
     setError(null);
 
-    if (!cvFile) {
-      setError('Por favor, selecciona un archivo para subir.');
+    const usuarioId = localStorage.getItem('usuarioId');
+    if (!usuarioId) {
+      setError('Usuario no autenticado.');
       setSubmitting(false);
       return;
     }
 
-    const formData = new FormData();
-    formData.append('cv', cvFile); // Este nombre debe coincidir con el backend
-    formData.append('ofertalaboral_id', id);
-    formData.append('usuario_id', localStorage.getItem('usuarioId'));
+    if (!cvFile) {
+      setError('Por favor selecciona un archivo.');
+      setSubmitting(false);
+      return;
+    }
 
     try {
-      const res = await fetch('http://localhost:8000/postulacion/upload', {
+      const postData = {
+        ofertalaboral: `/api/ofertalaborals/${id}`,
+        usuario: `/api/usuarios/${usuarioId}`,
+      };
+
+      const resPostulacion = await fetch('http://localhost:8000/api/postulacions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/ld+json',
+          Accept: 'application/ld+json',
+        },
+        body: JSON.stringify(postData),
+      });
+
+      if (!resPostulacion.ok) {
+        const errorBody = await resPostulacion.json();
+        throw new Error(errorBody['hydra:description'] || 'Error al crear la postulación');
+      }
+
+      const postulacion = await resPostulacion.json();
+
+      const formData = new FormData();
+      formData.append('cv', cvFile);
+
+      const resUpload = await fetch(`http://localhost:8000/postulacion/upload-pdf/${postulacion.id}`, {
         method: 'POST',
         body: formData,
       });
 
-      const contentType = res.headers.get('content-type') || '';
-      const isJson = contentType.includes('application/json');
-
-      if (!res.ok) {
-        const errorBody = isJson ? await res.json() : await res.text();
-        const errorMsg = isJson
-          ? (errorBody.message || JSON.stringify(errorBody))
-          : errorBody;
-        throw new Error(`Error ${res.status}: ${errorMsg}`);
+      if (!resUpload.ok) {
+        const errorText = await resUpload.text();
+        throw new Error(`Error al subir el CV: ${errorText}`);
       }
 
-      alert('¡Postulación enviada con éxito!');
+      alert('¡Postulación y CV enviados con éxito!');
       navigate('/empleos');
     } catch (err) {
       setError(err.message);
-      console.error('Fetch error:', err);
+      console.error(err);
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="container py-5">
-      <h1 className="mb-4 text-white">Postularse a la Oferta</h1>
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <div className="mb-3">
-          <label htmlFor="cv" className="form-label">Sube tu CV (PDF, Word, etc.)</label>
+    <div className="postular container py-5">
+      <h1 className="postular__title mb-4 text-white">Postularse a la Oferta</h1>
+      <form className="postular__form" onSubmit={handleSubmit} encType="multipart/form-data" noValidate>
+        <div className="postular__form-group mb-3">
+          <label htmlFor="cv" className="postular__label form-label text-white">
+            Sube tu CV
+          </label>
           <input
             type="file"
-            className="form-control"
             id="cv"
             name="cv"
-            onChange={handleFileChange}
             accept=".pdf,.doc,.docx"
+            className="postular__input form-control"
+            onChange={handleFileChange}
           />
         </div>
-        {error && <div className="text-danger mb-3">{error}</div>}
-        <button type="submit" className="btn btn-primary" disabled={submitting}>
+        {error && <div className="postular__error text-danger mb-3">{error}</div>}
+        <button type="submit" className="postular__submit btn btn-success" disabled={submitting}>
           {submitting ? 'Enviando...' : 'Enviar Postulación'}
         </button>
       </form>

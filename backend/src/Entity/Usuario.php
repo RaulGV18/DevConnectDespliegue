@@ -8,9 +8,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: UsuarioRepository::class)]
 #[ApiResource]
+#[ApiFilter(SearchFilter::class, properties: ['email' => 'exact'])]
 class Usuario
 {
     #[ORM\Id]
