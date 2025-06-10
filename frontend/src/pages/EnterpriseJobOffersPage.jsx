@@ -35,29 +35,55 @@ function EnterpriseJobOffersPage() {
       });
   }, [empresaId, navigate]);
 
-  const handleDelete = (id) => {
-    if (!window.confirm('¿Estás seguro de que quieres eliminar esta oferta?')) return;
+  const handleDelete = async (id) => {
+    if (!window.confirm('¿Estás seguro de que quieres eliminar esta oferta y todas sus postulaciones asociadas?')) return;
 
-    fetch(`http://localhost:8000/api/ofertalaborals/${id}`, {
-      method: 'DELETE',
-      headers: {
-        Accept: 'application/ld+json',
-      },
-    })
-      .then(res => {
-        if (!res.ok) throw new Error('Error al eliminar la oferta');
-        setOffers(prev => prev.filter(offer => offer.id !== id));
-      })
-      .catch(err => {
-        alert('No se pudo eliminar la oferta: ' + err.message);
+    try {
+      // Obtener postulaciones asociadas a la oferta
+      const res = await fetch(`http://localhost:8000/api/postulacions?oferta=/api/ofertalaborals/${id}`, {
+        headers: { Accept: 'application/ld+json' }
       });
+
+      if (!res.ok) throw new Error('No se pudieron obtener las postulaciones');
+
+      const data = await res.json();
+
+      // Eliminar cada postulación y su CV
+      for (const postulacion of data.member || []) {
+        // Intentar eliminar el PDF (ignorar si no existe)
+        await fetch(`http://localhost:8000/postulacion/delete-pdf/${postulacion.id}`, {
+          method: 'DELETE'
+        });
+
+        // Eliminar la postulación
+        await fetch(`http://localhost:8000/api/postulacions/${postulacion.id}`, {
+          method: 'DELETE',
+          headers: { Accept: 'application/ld+json' }
+        });
+      }
+
+      // Eliminar la oferta laboral
+      const deleteRes = await fetch(`http://localhost:8000/api/ofertalaborals/${id}`, {
+        method: 'DELETE',
+        headers: { Accept: 'application/ld+json' }
+      });
+
+      if (!deleteRes.ok) throw new Error('Error al eliminar la oferta');
+
+      // Actualizar la lista de ofertas
+      setOffers(prev => prev.filter(offer => offer.id !== id));
+    } catch (err) {
+      alert('No se pudo eliminar la oferta o sus postulaciones: ' + err.message);
+    }
   };
 
   if (loading) return (
     <div className="enterprise__loading">
       <div className="enterprise__spinner"></div>
       <p>Cargando ofertas...</p>
-    </div>);
+    </div>
+  );
+
   if (error) return <div className="enterprise-offers__error">Error: {error}</div>;
 
   return (

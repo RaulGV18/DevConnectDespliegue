@@ -74,26 +74,33 @@ function JobsPage() {
     navigate(`/postular/${ofertaId}`);
   };
 
-  const eliminarPostulacion = async (ofertaId) => {
+  const eliminarPostulacionYcv = async (ofertaId) => {
     const postulacion = postulaciones.find(
       p => p.usuario === usuarioRef && p.ofertalaboral === `/api/ofertalaborals/${ofertaId}`
     );
 
     if (!postulacion) return;
 
-    if (!window.confirm('¿Estás seguro de que quieres eliminar tu postulación?')) return;
+    if (!window.confirm('¿Estás seguro de que quieres eliminar tu postulación y el archivo CV?')) return;
 
     try {
+      const resCv = await fetch(`http://localhost:8000/postulacion/delete-pdf/${postulacion.id}`, {
+        method: 'DELETE',
+      });
+
       const res = await fetch(`http://localhost:8000/api/postulacions/${postulacion.id}`, {
         method: 'DELETE',
-        headers: {
-          Accept: 'application/ld+json',
-        },
+        headers: { Accept: 'application/ld+json' },
       });
 
       if (!res.ok) throw new Error('No se pudo eliminar la postulación');
+      if (!resCv.ok) {
+        const data = await resCv.json();
+        console.warn('CV no eliminado:', data.error);
+      }
 
       setPostulaciones(prev => prev.filter(p => p.id !== postulacion.id));
+      alert('Postulación y CV eliminados correctamente.');
     } catch (err) {
       alert('Error: ' + err.message);
     }
@@ -159,7 +166,7 @@ function JobsPage() {
                   {yaPostulado ? (
                     <button
                       className="btn btn-danger mt-3"
-                      onClick={() => eliminarPostulacion(oferta.id)}
+                      onClick={() => eliminarPostulacionYcv(oferta.id)}
                     >
                       Eliminar Postulación
                     </button>
