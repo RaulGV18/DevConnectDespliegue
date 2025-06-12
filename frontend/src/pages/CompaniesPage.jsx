@@ -14,7 +14,7 @@ function CompaniesPage() {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const res = await fetch('http://localhost:8000/api/empresas');
+        const res = await fetch('http://backend.devconnect.local:8000/api/empresas');
         if (!res.ok) {
           throw new Error(`Error al cargar empresas: ${res.statusText}`);
         }
@@ -73,7 +73,7 @@ function CompaniesPage() {
         ) : (
           <div className="companies__grid">
             {displayedCompanies.map((company) => {
-              const imageUrl = `http://localhost:8000/uploads/fotos/empresa_${company.id}.jpg?${Date.now()}`;
+              const imageUrl = `http://backend.devconnect.local:8000/uploads/fotos/empresa_${company.id}.jpg?${Date.now()}`;
 
               return (
                 <div key={company.id} className="companies__card">

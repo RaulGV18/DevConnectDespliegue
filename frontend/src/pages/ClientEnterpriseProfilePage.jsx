@@ -14,7 +14,7 @@ function ClientEnterpriseProfilePage() {
       return;
     }
 
-    fetch(`http://localhost:8000/api/empresas/${id}`, {
+    fetch(`http://backend.devconnect.local:8000/api/empresas/${id}`, {
       headers: {
         Accept: 'application/ld+json',
       },
@@ -43,7 +43,7 @@ function ClientEnterpriseProfilePage() {
     );
   }
 
-  const imageUrl = `http://localhost:8000/uploads/fotos/empresa_${id}.jpg?${Date.now()}`;
+  const imageUrl = `http://backend.devconnect.local:8000/uploads/fotos/empresa_${id}.jpg?${Date.now()}`;
 
   return (
     <div className="enterprise-profile">

@@ -15,7 +15,7 @@ function CandidatesPage() {
       try {
         // Obtener postulaciones
         const resPostulaciones = await fetch(
-          `http://localhost:8000/api/postulacions?ofertalaboral=/api/ofertalaborals/${id}`, 
+          `http://backend.devconnect.local:8000/api/postulacions?ofertalaboral=/api/ofertalaborals/${id}`, 
           { headers: { Accept: 'application/ld+json' } }
         );
 
@@ -27,7 +27,7 @@ function CandidatesPage() {
 
         // Obtener nombre de la oferta
         const resOferta = await fetch(
-          `http://localhost:8000/api/ofertalaborals/${id}`, 
+          `http://backend.devconnect.local:8000/api/ofertalaborals/${id}`, 
           { headers: { Accept: 'application/ld+json' } }
         );
 
@@ -40,7 +40,7 @@ function CandidatesPage() {
         const usuariosFetches = postulacionesList.map(postulacion => {
           const usuarioIRI = postulacion.usuario;
           const usuarioId = usuarioIRI.split('/').pop();
-          return fetch(`http://localhost:8000/api/usuarios/${usuarioId}`, {
+          return fetch(`http://backend.devconnect.local:8000/api/usuarios/${usuarioId}`, {
             headers: { Accept: 'application/ld+json' }
           }).then(res => {
             if (!res.ok) throw new Error('Error al cargar usuario');
@@ -99,7 +99,7 @@ function CandidatesPage() {
           const usuarioId = usuarioIRI.split('/').pop();
 
           const perfilLink = `/perfil-candidato/${usuarioId}`;
-          const cvUrl = `http://localhost:8000/descargar-cv/${id}/${usuarioId}`;
+          const cvUrl = `http://backend.devconnect.local:8000/descargar-cv/${id}/${usuarioId}`;
 
           const usuario = usuariosData[usuarioId];
 

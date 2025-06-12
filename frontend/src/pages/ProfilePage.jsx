@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import profileImg from '../img/ejemplo.png';
-import '../styles/ProfilePage.css'; // Importa el CSS separado
+import '../styles/ProfilePage.css';
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ function ProfilePage() {
       return;
     }
 
-    fetch(`http://localhost:8000/api/usuarios/${usuarioId}`, {
+    fetch(`http://backend.devconnect.local:8000/api/usuarios/${usuarioId}`, {
       headers: {
         Accept: 'application/ld+json',
       },
@@ -37,7 +37,7 @@ function ProfilePage() {
   }
 
   // Ruta fija para la imagen basada en usuarioId con timestamp para evitar cache
-  const fotoPerfilUrl = `http://localhost:8000/uploads/fotos/usuario_${usuarioId}.jpg?${Date.now()}`;
+  const fotoPerfilUrl = `http://backend.devconnect.local:8000/uploads/fotos/usuario_${usuarioId}.jpg?${Date.now()}`;
 
   return (
     <div className="profile-page">

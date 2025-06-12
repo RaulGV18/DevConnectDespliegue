@@ -37,7 +37,7 @@ function AddJobOfferPage() {
     };
 
     try {
-      const response = await fetch('http://localhost:8000/api/ofertalaborals', {
+      const response = await fetch('http://backend.devconnect.local:8000/api/ofertalaborals', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/ld+json',

@@ -15,7 +15,7 @@ function LoginPage() {
   const isLoggedIn = localStorage.getItem('usuarioId') || localStorage.getItem('empresaId');
 
   useEffect(() => {
-    const endpoint = mode === 'empresa' ? 'http://localhost:8000/api/empresas' : 'http://localhost:8000/api/usuarios';
+    const endpoint = mode === 'empresa' ? 'http://backend.devconnect.local:8000/api/empresas' : 'http://backend.devconnect.local:8000/api/usuarios';
     fetch(endpoint)
       .then((res) => res.json())
       .then((data) => setUsuarios(data.member || []))
