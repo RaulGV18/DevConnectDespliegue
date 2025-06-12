@@ -46,7 +46,7 @@ function RegisterPage() {
       // Primero validamos si existe duplicado
       if (mode === 'cliente') {
         const resCheckUsuario = await fetch(
-          `http://backend.devconnect.local:8000/api/usuarios?email=${encodeURIComponent(email)}`
+          `http://backenddevconnect.work.gd:8000/api/usuarios?email=${encodeURIComponent(email)}`
         );
         const checkDataUsuario = await resCheckUsuario.json();
 
@@ -60,7 +60,7 @@ function RegisterPage() {
         }
       } else {
         const resCheckEmpresa = await fetch(
-          `http://backend.devconnect.local:8000/api/empresas?nombre=${encodeURIComponent(nombreEmpresa)}`
+          `http://backenddevconnect.work.gd:8000/api/empresas?nombre=${encodeURIComponent(nombreEmpresa)}`
         );
         const checkDataEmpresa = await resCheckEmpresa.json();
         const membersEmpresa =
@@ -81,8 +81,8 @@ function RegisterPage() {
 
       const endpoint =
         mode === 'cliente'
-          ? 'http://backend.devconnect.local:8000/api/usuarios'
-          : 'http://backend.devconnect.local:8000/api/empresas';
+          ? 'http://backenddevconnect.work.gd:8000/api/usuarios'
+          : 'http://backenddevconnect.work.gd:8000/api/empresas';
 
       const res = await fetch(endpoint, {
         method: 'POST',

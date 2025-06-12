@@ -19,7 +19,7 @@ const CVGenerator = () => {
     const userId = localStorage.getItem('usuarioId');
     if (!userId) return;
 
-    fetch(`http://backend.devconnect.local:8000/api/usuarios/${userId}`)
+    fetch(`http://backenddevconnect.work.gd:8000/api/usuarios/${userId}`)
       .then(res => res.json())
       .then(user => {
         setData(prev => ({
@@ -48,7 +48,7 @@ const CVGenerator = () => {
     if (foto) formData.append('foto', foto);
 
     try {
-      const res = await fetch('http://backend.devconnect.local:8000/api/generar-cv', {
+      const res = await fetch('http://backenddevconnect.work.gd:8000/api/generar-cv', {
         method: 'POST',
         body: formData,
       });

@@ -14,7 +14,7 @@ function ProfilePage() {
       return;
     }
 
-    fetch(`http://backend.devconnect.local:8000/api/usuarios/${usuarioId}`, {
+    fetch(`http://backenddevconnect.work.gd:8000/api/usuarios/${usuarioId}`, {
       headers: {
         Accept: 'application/ld+json',
       },
@@ -37,7 +37,7 @@ function ProfilePage() {
   }
 
   // Ruta fija para la imagen basada en usuarioId con timestamp para evitar cache
-  const fotoPerfilUrl = `http://backend.devconnect.local:8000/uploads/fotos/usuario_${usuarioId}.jpg?${Date.now()}`;
+  const fotoPerfilUrl = `http://backenddevconnect.work.gd:8000/uploads/fotos/usuario_${usuarioId}.jpg?${Date.now()}`;
 
   return (
     <div className="profile-page">

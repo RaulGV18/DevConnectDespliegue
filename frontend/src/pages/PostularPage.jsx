@@ -46,7 +46,7 @@ function PostularPage() {
         usuario: `/api/usuarios/${usuarioId}`,
       };
 
-      const resPostulacion = await fetch('http://backend.devconnect.local:8000/api/postulacions', {
+      const resPostulacion = await fetch('http://backenddevconnect.work.gd:8000/api/postulacions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/ld+json',
@@ -65,7 +65,7 @@ function PostularPage() {
       const formData = new FormData();
       formData.append('cv', cvFile);
 
-      const resUpload = await fetch(`http://backend.devconnect.local:8000/postulacion/upload-pdf/${postulacion.id}`, {
+      const resUpload = await fetch(`http://backenddevconnect.work.gd:8000/postulacion/upload-pdf/${postulacion.id}`, {
         method: 'POST',
         body: formData,
       });

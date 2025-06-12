@@ -16,7 +16,7 @@ function EnterpriseJobOffersPage() {
       return;
     }
 
-    fetch(`http://backend.devconnect.local:8000/api/ofertalaborals?empresa=/api/empresas/${empresaId}`, {
+    fetch(`http://backenddevconnect.work.gd:8000/api/ofertalaborals?empresa=/api/empresas/${empresaId}`, {
       headers: {
         Accept: 'application/ld+json',
       },
@@ -40,7 +40,7 @@ function EnterpriseJobOffersPage() {
 
     try {
       // Obtener postulaciones asociadas a la oferta
-      const res = await fetch(`http://backend.devconnect.local:8000/api/postulacions?oferta=/api/ofertalaborals/${id}`, {
+      const res = await fetch(`http://backenddevconnect.work.gd:8000/api/postulacions?oferta=/api/ofertalaborals/${id}`, {
         headers: { Accept: 'application/ld+json' }
       });
 
@@ -51,19 +51,19 @@ function EnterpriseJobOffersPage() {
       // Eliminar cada postulación y su CV
       for (const postulacion of data.member || []) {
         // Intentar eliminar el PDF (ignorar si no existe)
-        await fetch(`http://backend.devconnect.local:8000/postulacion/delete-pdf/${postulacion.id}`, {
+        await fetch(`http://backenddevconnect.work.gd:8000/postulacion/delete-pdf/${postulacion.id}`, {
           method: 'DELETE'
         });
 
         // Eliminar la postulación
-        await fetch(`http://backend.devconnect.local:8000/api/postulacions/${postulacion.id}`, {
+        await fetch(`http://backenddevconnect.work.gd:8000/api/postulacions/${postulacion.id}`, {
           method: 'DELETE',
           headers: { Accept: 'application/ld+json' }
         });
       }
 
       // Eliminar la oferta laboral
-      const deleteRes = await fetch(`http://backend.devconnect.local:8000/api/ofertalaborals/${id}`, {
+      const deleteRes = await fetch(`http://backenddevconnect.work.gd:8000/api/ofertalaborals/${id}`, {
         method: 'DELETE',
         headers: { Accept: 'application/ld+json' }
       });

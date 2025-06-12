@@ -23,7 +23,7 @@ function EditProfilePage() {
       return;
     }
 
-    fetch(`http://backend.devconnect.local:8000/api/usuarios/${usuarioId}`, {
+    fetch(`http://backenddevconnect.work.gd:8000/api/usuarios/${usuarioId}`, {
       headers: { Accept: 'application/ld+json' },
     })
       .then((res) => {
@@ -41,7 +41,7 @@ function EditProfilePage() {
           descripcion: data.descripcion || '',
         });
         // Cargar imagen si existe
-        setFotoPreview(`http://backend.devconnect.local:8000/uploads/fotos/usuario_${usuarioId}.jpg?${Date.now()}`);
+        setFotoPreview(`http://backenddevconnect.work.gd:8000/uploads/fotos/usuario_${usuarioId}.jpg?${Date.now()}`);
       })
       .catch(() => navigate('/login'));
   }, [navigate, usuarioId]);
@@ -54,7 +54,7 @@ function EditProfilePage() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch(`http://backend.devconnect.local:8000/api/usuarios/${usuarioId}`, {
+    fetch(`http://backenddevconnect.work.gd:8000/api/usuarios/${usuarioId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/merge-patch+json',
@@ -80,7 +80,7 @@ function EditProfilePage() {
     const formDataImg = new FormData();
     formDataImg.append('fotoPerfil', file);
 
-    fetch(`http://backend.devconnect.local:8000/subir-foto/${usuarioId}`, {
+    fetch(`http://backenddevconnect.work.gd:8000/subir-foto/${usuarioId}`, {
       method: 'POST',
       body: formDataImg,
     })
@@ -93,7 +93,7 @@ function EditProfilePage() {
         return res.json();
       })
       .then(() => {
-        setFotoPreview(`http://backend.devconnect.local:8000/uploads/fotos/usuario_${usuarioId}.jpg?${Date.now()}`);
+        setFotoPreview(`http://backenddevconnect.work.gd:8000/uploads/fotos/usuario_${usuarioId}.jpg?${Date.now()}`);
       })
       .catch((err) => {
         console.error('Error al subir la imagen:', err);

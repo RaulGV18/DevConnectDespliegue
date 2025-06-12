@@ -18,10 +18,10 @@ function JobsPage() {
     const fetchData = async () => {
       try {
         const [ofertasRes, postulacionesRes] = await Promise.all([
-          fetch('http://backend.devconnect.local:8000/api/ofertalaborals', {
+          fetch('http://backenddevconnect.work.gd:8000/api/ofertalaborals', {
             headers: { Accept: 'application/ld+json' },
           }),
-          fetch('http://backend.devconnect.local:8000/api/postulacions', {
+          fetch('http://backenddevconnect.work.gd:8000/api/postulacions', {
             headers: { Accept: 'application/ld+json' },
           }),
         ]);
@@ -43,7 +43,7 @@ function JobsPage() {
           empresaRefs.map(async (empresaRef) => {
             const url = empresaRef.startsWith('http')
               ? empresaRef
-              : `http://backend.devconnect.local:8000${empresaRef}`;
+              : `http://backenddevconnect.work.gd:8000${empresaRef}`;
             const res = await fetch(url, {
               headers: { Accept: 'application/ld+json' },
             });
@@ -84,11 +84,11 @@ function JobsPage() {
     if (!window.confirm('¿Estás seguro de que quieres eliminar tu postulación y el archivo CV?')) return;
 
     try {
-      const resCv = await fetch(`http://backend.devconnect.local:8000/postulacion/delete-pdf/${postulacion.id}`, {
+      const resCv = await fetch(`http://backenddevconnect.work.gd:8000/postulacion/delete-pdf/${postulacion.id}`, {
         method: 'DELETE',
       });
 
-      const res = await fetch(`http://backend.devconnect.local:8000/api/postulacions/${postulacion.id}`, {
+      const res = await fetch(`http://backenddevconnect.work.gd:8000/api/postulacions/${postulacion.id}`, {
         method: 'DELETE',
         headers: { Accept: 'application/ld+json' },
       });

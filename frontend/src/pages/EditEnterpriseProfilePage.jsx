@@ -23,7 +23,7 @@ function EditEnterpriseProfilePage() {
       return;
     }
 
-    fetch(`http://backend.devconnect.local:8000/api/empresas/${empresaId}`, {
+    fetch(`http://backenddevconnect.work.gd:8000/api/empresas/${empresaId}`, {
       headers: {
         Accept: 'application/ld+json',
       },
@@ -43,7 +43,7 @@ function EditEnterpriseProfilePage() {
           telefono: data.telefono || '',
         });
 
-        setFotoPreview(`http://backend.devconnect.local:8000/uploads/fotos/empresa_${empresaId}.jpg?${Date.now()}`);
+        setFotoPreview(`http://backenddevconnect.work.gd:8000/uploads/fotos/empresa_${empresaId}.jpg?${Date.now()}`);
       })
       .catch((err) => {
         console.error(err);
@@ -61,7 +61,7 @@ function EditEnterpriseProfilePage() {
     const empresaId = localStorage.getItem('empresaId');
     if (!empresaId) return;
 
-    fetch(`http://backend.devconnect.local:8000/api/empresas/${empresaId}`, {
+    fetch(`http://backenddevconnect.work.gd:8000/api/empresas/${empresaId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/merge-patch+json',
@@ -90,7 +90,7 @@ function EditEnterpriseProfilePage() {
     const formDataImg = new FormData();
     formDataImg.append('fotoPerfil', file);
 
-    fetch(`http://backend.devconnect.local:8000/subir-foto-empresa/${empresaId}`, {
+    fetch(`http://backenddevconnect.work.gd:8000/subir-foto-empresa/${empresaId}`, {
       method: 'POST',
       body: formDataImg,
     })
@@ -102,7 +102,7 @@ function EditEnterpriseProfilePage() {
         return res.json();
       })
       .then(() => {
-        setFotoPreview(`http://backend.devconnect.local:8000/uploads/fotos/empresa_${empresaId}.jpg?${Date.now()}`);
+        setFotoPreview(`http://backenddevconnect.work.gd:8000/uploads/fotos/empresa_${empresaId}.jpg?${Date.now()}`);
       })
       .catch((err) => {
         console.error('Error al subir la imagen:', err);

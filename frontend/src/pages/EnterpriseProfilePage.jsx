@@ -15,7 +15,7 @@ function EnterpriseProfilePage() {
     }
     setEmpresaId(id);
 
-    fetch(`http://backend.devconnect.local:8000/api/empresas/${id}`, {
+    fetch(`http://backenddevconnect.work.gd:8000/api/empresas/${id}`, {
       headers: { Accept: 'application/ld+json' },
     })
       .then(res => {
@@ -42,7 +42,7 @@ function EnterpriseProfilePage() {
           {empresaId && (
             <div className="enterprise-profile__image-wrapper">
               <img
-                src={`http://backend.devconnect.local:8000/uploads/fotos/empresa_${empresaId}.jpg?${Date.now()}`}
+                src={`http://backenddevconnect.work.gd:8000/uploads/fotos/empresa_${empresaId}.jpg?${Date.now()}`}
                 alt="Foto de la empresa"
                 className="enterprise-profile__image"
                 onError={(e) => {

@@ -20,7 +20,7 @@ function EditJobOfferPage() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch(`http://backend.devconnect.local:8000/api/ofertalaborals/${id}`, {
+    fetch(`http://backenddevconnect.work.gd:8000/api/ofertalaborals/${id}`, {
       headers: {
         Accept: 'application/ld+json',
       },
@@ -55,7 +55,7 @@ function EditJobOfferPage() {
     setSaving(true);
     setError(null);
 
-    fetch(`http://backend.devconnect.local:8000/api/ofertalaborals/${id}`, {
+    fetch(`http://backenddevconnect.work.gd:8000/api/ofertalaborals/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/merge-patch+json',
